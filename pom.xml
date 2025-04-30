@@ -105,14 +105,10 @@
 
     <distributionManagement>
         <repository>
-            <id>ossrh</id>
-            <name>OSSRH Releases</name>
-            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <id>github</id>
+            <name>GitHub OWNER Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/rabinarayanpatra/sanitizer-lib</url>
         </repository>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <name>OSSRH Snapshots</name>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
-        </snapshotRepository>
     </distributionManagement>
+
 </project>

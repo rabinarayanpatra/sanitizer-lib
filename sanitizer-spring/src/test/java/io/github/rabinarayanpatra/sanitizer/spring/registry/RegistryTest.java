@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+import io.github.rabinarayanpatra.sanitizer.builtin.CreditCardMaskSanitizer;
 import io.github.rabinarayanpatra.sanitizer.builtin.LowerCaseSanitizer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,8 +20,8 @@ class RegistryTest {
 
   @Test
   void lowerCaseSanitizerIsAvailable() {
-    var s = registry.get( LowerCaseSanitizer.class );
-    assertEquals( "foo", s.sanitize( "FOO" ) );
+    var s = registry.get( CreditCardMaskSanitizer.class );
+    assertEquals( "**** **** **** 7878", s.sanitize( "1234456745677878" ) );
   }
 
   /**

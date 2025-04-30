@@ -7,8 +7,8 @@ import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
 /**
  * Sanitizer that replaces characters not allowed in most filenames with underscores.
  * <p>
- * This includes characters like {@code \ / : * ? " < > |}, which are restricted on Windows and other
- * common filesystems. Useful for safely storing user-generated filenames or exporting reports.
+ * This includes characters like {@code \ / : * ? " < > |}, which are restricted on Windows and other common
+ * filesystems. Useful for safely storing user-generated filenames or exporting reports.
  *
  * <pre>
  * {@code
@@ -30,11 +30,11 @@ public class SafeFilenameSanitizer implements FieldSanitizer<String> {
    * @return a sanitized filename-safe string, or {@code null} if input is {@code null}
    */
   @Override
-  public String sanitize( final String in) {
-    if (in == null) {
+  public String sanitize( final String in ) {
+    if( in == null ) {
       return null;
     }
-    return in.trim().replaceAll("[\\\\/:*?\"<>|]", "_");
+    return in.trim().replaceAll( "[\\\\/:*?\"<>|]", "_" );
   }
 }
 

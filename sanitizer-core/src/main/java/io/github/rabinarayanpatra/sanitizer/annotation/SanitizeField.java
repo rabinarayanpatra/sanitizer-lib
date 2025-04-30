@@ -11,9 +11,8 @@ import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
 /**
  * Indicates that a field should be sanitized using the specified {@link FieldSanitizer} implementation.
  * <p>
- * This annotation can be applied to any field to enforce sanitization either at runtime (via reflection) or
- * during data binding, persistence, or other integration hooks depending on the active Sanitizer module
- * (e.g., Spring or JPA).
+ * This annotation can be applied to any field to enforce sanitization either at runtime (via reflection) or during data
+ * binding, persistence, or other integration hooks depending on the active Sanitizer module (e.g., Spring or JPA).
  * <p>
  * Multiple {@code @SanitizeField} annotations may be applied to a single field by using {@link Repeatable}.
  *
@@ -41,6 +40,5 @@ public @interface SanitizeField {
    *
    * @return the class of the {@code FieldSanitizer} to use
    */
-  @SuppressWarnings("java:S1452")
-  Class<? extends FieldSanitizer<?>> using();
+  @SuppressWarnings( "java:S1452" ) Class<? extends FieldSanitizer<?>> using();
 }

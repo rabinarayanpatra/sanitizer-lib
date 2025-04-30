@@ -7,8 +7,8 @@ import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
 /**
  * Sanitizer that trims the input string and returns {@code null} if the result is blank.
  * <p>
- * Useful for converting user input like empty or whitespace-only strings into {@code null},
- * especially in form handling or persistence layers where {@code null} is preferred over empty strings.
+ * Useful for converting user input like empty or whitespace-only strings into {@code null}, especially in form handling
+ * or persistence layers where {@code null} is preferred over empty strings.
  *
  * <pre>
  * {@code
@@ -30,8 +30,8 @@ public class NullIfBlankSanitizer implements FieldSanitizer<String> {
    * @return {@code null} if input is blank or {@code null}; otherwise, the original string
    */
   @Override
-  public String sanitize( final String in) {
-    if (in == null) {
+  public String sanitize( final String in ) {
+    if( in == null ) {
       return null;
     }
     return in.trim().isEmpty() ? null : in;

@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component;
 import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
 
 /**
- * Sanitizer that trims leading and trailing whitespace and collapses internal whitespace sequences
- * into a single space.
+ * Sanitizer that trims leading and trailing whitespace and collapses internal whitespace sequences into a single
+ * space.
  * <p>
  * Useful for cleaning up user input where excessive spacing may be present, such as names or addresses.
  *
@@ -30,10 +30,10 @@ public class CollapseWhitespaceSanitizer implements FieldSanitizer<String> {
    * @return the sanitized string, or {@code null} if the input was {@code null}
    */
   @Override
-  public String sanitize( final String in) {
-    if (in == null) {
+  public String sanitize( final String in ) {
+    if( in == null ) {
       return null;
     }
-    return in.trim().replaceAll("\\s+", " ");
+    return in.trim().replaceAll( "\\s+", " " );
   }
 }

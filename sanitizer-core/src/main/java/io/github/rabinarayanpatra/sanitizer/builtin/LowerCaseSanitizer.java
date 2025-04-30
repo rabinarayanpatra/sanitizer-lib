@@ -29,7 +29,7 @@ public class LowerCaseSanitizer implements FieldSanitizer<String> {
    * @return the lowercase string, or {@code null} if input is {@code null}
    */
   @Override
-  public String sanitize( final String input) {
+  public String sanitize( final String input ) {
     return input == null ? null : input.toLowerCase();
   }
 }

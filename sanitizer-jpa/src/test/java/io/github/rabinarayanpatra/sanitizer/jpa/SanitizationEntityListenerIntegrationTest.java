@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import io.github.rabinarayanpatra.sanitizer.annotation.SanitizeField;
 import io.github.rabinarayanpatra.sanitizer.builtin.CreditCardMaskSanitizer;
+import io.github.rabinarayanpatra.sanitizer.jpa.SanitizationEntityListenerIntegrationTest.TestConfig;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
@@ -17,7 +18,7 @@ import jakarta.persistence.Id;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest( classes = SanitizationEntityListenerIntegrationTest.TestConfig.class )
+@SpringBootTest( classes = TestConfig.class )
 class SanitizationEntityListenerIntegrationTest {
 
   @Autowired
@@ -25,9 +26,9 @@ class SanitizationEntityListenerIntegrationTest {
 
   @Test
   void entityIsSanitizedBeforePersist() {
-    PaymentEntity p = new PaymentEntity();
+    final PaymentEntity p = new PaymentEntity();
     p.setCardNumber( "1234-5678-9012-3456" );
-    PaymentEntity saved = repository.save( p );
+    final PaymentEntity saved = repository.save( p );
 
     // Should be masked to "**** **** **** 3456"
     assertThat( saved.getCardNumber() ).endsWith( "3456" );
@@ -64,7 +65,7 @@ class SanitizationEntityListenerIntegrationTest {
       return id;
     }
 
-    public void setId( Long id ) {
+    public void setId( final Long id ) {
       this.id = id;
     }
 
@@ -72,7 +73,7 @@ class SanitizationEntityListenerIntegrationTest {
       return cardNumber;
     }
 
-    public void setCardNumber( String cn ) {
+    public void setCardNumber( final String cn ) {
       this.cardNumber = cn;
     }
   }

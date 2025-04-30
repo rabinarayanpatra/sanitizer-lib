@@ -1,16 +1,17 @@
 package io.github.rabinarayanpatra.sanitizer.builtin;
 
-import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 
 import org.springframework.stereotype.Component;
 
+import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
+
 /**
  * Sanitizer that converts a string into a lowercase, URL-friendly "slug" format.
  * <p>
- * Diacritics and accents are stripped, non-alphanumeric characters are replaced with dashes, and
- * leading/trailing dashes are removed. Commonly used for generating safe identifiers or SEO-friendly URLs.
+ * Diacritics and accents are stripped, non-alphanumeric characters are replaced with dashes, and leading/trailing
+ * dashes are removed. Commonly used for generating safe identifiers or SEO-friendly URLs.
  *
  * <pre>
  * {@code
@@ -32,15 +33,11 @@ public class SlugifySanitizer implements FieldSanitizer<String> {
    * @return the slugified string, or {@code null} if input is {@code null}
    */
   @Override
-  public String sanitize( final String in) {
-    if (in == null) {
+  public String sanitize( final String in ) {
+    if( in == null ) {
       return null;
     }
-    final String noAccent = Normalizer.normalize(in, Form.NFD)
-        .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
-    return noAccent
-        .toLowerCase()
-        .replaceAll("[^a-z0-9]+", "-")
-        .replaceAll("(^-+)|(-+$)", "");
+    final String noAccent = Normalizer.normalize( in, Form.NFD ).replaceAll( "\\p{InCombiningDiacriticalMarks}+", "" );
+    return noAccent.toLowerCase().replaceAll( "[^a-z0-9]+", "-" ).replaceAll( "(^-+)|(-+$)", "" );
   }
 }

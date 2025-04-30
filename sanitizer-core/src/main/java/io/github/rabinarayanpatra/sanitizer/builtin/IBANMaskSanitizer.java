@@ -7,8 +7,8 @@ import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
 /**
  * Sanitizer that masks an International Bank Account Number (IBAN), preserving only the last four characters.
  * <p>
- * All whitespace is removed before masking. The result is a masked string of asterisks followed by the last
- * four characters of the IBAN, helping protect sensitive account details while retaining partial traceability.
+ * All whitespace is removed before masking. The result is a masked string of asterisks followed by the last four
+ * characters of the IBAN, helping protect sensitive account details while retaining partial traceability.
  *
  * <pre>
  * {@code
@@ -31,20 +31,17 @@ public class IBANMaskSanitizer implements FieldSanitizer<String> {
    * @return the masked IBAN, or the original input if it has four or fewer characters; {@code null} if input is null
    */
   @Override
-  public String sanitize( final String in) {
-    if (in == null) {
+  public String sanitize( final String in ) {
+    if( in == null ) {
       return null;
     }
-    final String plain = in.replaceAll("\\s+", "");
-    if (plain.length() <= 4) {
+    final String plain = in.replaceAll( "\\s+", "" );
+    if( plain.length() <= 4 ) {
       return plain;
     }
 
     final int keep = 4;
     final int len = plain.length();
-    final StringBuilder sb = new StringBuilder();
-    sb.append( "*".repeat( len - keep ) );
-    sb.append(plain.substring(len - keep));
-    return sb.toString();
+    return "*".repeat( len - keep ) + plain.substring( len - keep );
   }
 }

@@ -4,13 +4,12 @@ import org.springframework.stereotype.Component;
 
 import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
 
-
 /**
- * Sanitizer that normalizes a phone number to E.164 format by stripping non-digit characters and
- * prepending a {@code +}.
+ * Sanitizer that normalizes a phone number to E.164 format by stripping non-digit characters and prepending a
+ * {@code +}.
  * <p>
- * This sanitizer assumes the input already includes the full international number with country code.
- * It is useful for ensuring consistent phone number representation across systems.
+ * This sanitizer assumes the input already includes the full international number with country code. It is useful for
+ * ensuring consistent phone number representation across systems.
  *
  * <pre>
  * {@code
@@ -32,9 +31,11 @@ public class PhoneE164Sanitizer implements FieldSanitizer<String> {
    * @return the normalized E.164 phone number, or {@code null} if the result is empty or input is {@code null}
    */
   @Override
-  public String sanitize( final String in) {
-    if (in == null) return null;
-    final String digits = in.replaceAll("\\D+", "");
+  public String sanitize( final String in ) {
+    if( in == null ) {
+      return null;
+    }
+    final String digits = in.replaceAll( "\\D+", "" );
     return digits.isEmpty() ? null : "+" + digits;
   }
 }

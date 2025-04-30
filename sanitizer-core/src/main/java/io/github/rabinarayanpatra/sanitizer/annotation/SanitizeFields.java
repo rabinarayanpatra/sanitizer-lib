@@ -8,8 +8,8 @@ import java.lang.annotation.Target;
 /**
  * Container annotation for repeating {@link SanitizeField} annotations on a single field.
  * <p>
- * This is automatically used when multiple {@code @SanitizeField} annotations are applied to a field,
- * and does not need to be declared manually.
+ * This is automatically used when multiple {@code @SanitizeField} annotations are applied to a field, and does not need
+ * to be declared manually.
  *
  * <pre>
  * {@code

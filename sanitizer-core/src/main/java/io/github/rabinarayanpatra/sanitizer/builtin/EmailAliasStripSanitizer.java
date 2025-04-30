@@ -7,8 +7,8 @@ import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
 /**
  * Sanitizer that removes aliasing from email addresses by stripping the {@code +alias} part before the {@code @}.
  * <p>
- * This is commonly used to normalize email addresses for deduplication or identity matching, especially for
- * services like Gmail that allow aliasing via {@code user+label@example.com}.
+ * This is commonly used to normalize email addresses for deduplication or identity matching, especially for services
+ * like Gmail that allow aliasing via {@code user+label@example.com}.
  *
  * <pre>
  * {@code
@@ -30,11 +30,11 @@ public class EmailAliasStripSanitizer implements FieldSanitizer<String> {
    * @return the normalized email address, or {@code null} if input is {@code null}
    */
   @Override
-  public String sanitize( final String in) {
-    if (in == null) {
+  public String sanitize( final String in ) {
+    if( in == null ) {
       return null;
     }
     final String lower = in.trim().toLowerCase();
-    return lower.replaceFirst("\\+[^@]+(?=@)", "");
+    return lower.replaceFirst( "\\+[^@]+(?=@)", "" );
   }
 }

@@ -4,10 +4,33 @@ import org.springframework.stereotype.Component;
 
 import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
 
+/**
+ * Sanitizer that converts input text to lowercase using the default locale.
+ * <p>
+ * Useful for normalization tasks such as preparing emails, usernames, or tags for comparison and storage.
+ *
+ * <pre>
+ * {@code
+ * String input = "HelloWorld@Email.Com";
+ * String sanitized = new LowerCaseSanitizer().sanitize(input); // "helloworld@email.com"
+ * }
+ * </pre>
+ *
+ * @see FieldSanitizer
+ * @since 1.0.0
+ */
 @Component
 public class LowerCaseSanitizer implements FieldSanitizer<String> {
+
+  /**
+   * Converts the input string to lowercase.
+   *
+   * @param input the string to sanitize
+   * @return the lowercase string, or {@code null} if input is {@code null}
+   */
   @Override
-  public String sanitize( String input ) {
-    return ( input == null ) ? null : input.toLowerCase();
+  public String sanitize( final String input) {
+    return input == null ? null : input.toLowerCase();
   }
 }
+

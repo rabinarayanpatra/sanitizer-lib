@@ -5,6 +5,7 @@ package io.github.rabinarayanpatra.sanitizer.core;
  *
  * @param <T> the type of the field (e.g., String, LocalDate, BigDecimal)
  */
+@FunctionalInterface
 public interface FieldSanitizer<T> {
   /**
    * Apply sanitization to the input value.

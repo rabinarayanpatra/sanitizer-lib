@@ -7,12 +7,21 @@ import com.fasterxml.jackson.databind.Module;
 
 import io.github.rabinarayanpatra.sanitizer.spring.jackson.SanitizerModule;
 
+/**
+ * Spring Boot autoconfiguration that registers the {@link SanitizerModule} with Jackson.
+ * <p>
+ * This ensures that fields annotated with {@link io.github.rabinarayanpatra.sanitizer.annotation.SanitizeField} are
+ * automatically sanitized during JSON deserialization in Spring-managed {@code ObjectMapper} instances.
+ *
+ * @since 1.0.0
+ */
 @Configuration
 public class SanitizerAutoConfiguration {
 
   /**
-   * Registers our Jackson module so that Spring Boot's ObjectMappers automatically apply @SanitizeField during JSON
-   * deserialization.
+   * Registers the custom Jackson module for applying field sanitization during deserialization.
+   *
+   * @return a Jackson {@link Module} that triggers sanitization on fields annotated with {@code @SanitizeField}
    */
   @Bean
   public Module sanitizerModule() {

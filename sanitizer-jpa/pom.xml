@@ -1,0 +1,30 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.github.rabinarayanpatra.sanitizer</groupId>
+        <artifactId>sanitizer-lib</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>sanitizer-jpa</artifactId>
+    <packaging>jar</packaging>
+    <name>Sanitizer JPA Integration</name>
+
+    <dependencies>
+        <!-- core library -->
+        <dependency>
+            <groupId>io.github.rabinarayanpatra.sanitizer</groupId>
+            <artifactId>sanitizer-core</artifactId>
+        </dependency>
+
+        <!-- JPA API only -->
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+        </dependency>
+    </dependencies>
+</project>

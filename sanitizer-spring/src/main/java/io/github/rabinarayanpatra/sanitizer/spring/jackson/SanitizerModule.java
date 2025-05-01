@@ -15,7 +15,7 @@ import io.github.rabinarayanpatra.sanitizer.core.SanitizationUtils;
 
 /**
  * Jackson module that integrates with Spring Boot to apply
- * {@link io.github.rabinarayanpatra.sanitizer.annotation.SanitizeField} annotations during JSON deserialization.
+ * {@link io.github.rabinarayanpatra.sanitizer.annotation.Sanitize} annotations during JSON deserialization.
  * <p>
  * This module wraps default bean deserializers and invokes {@link SanitizationUtils#apply(Object)} immediately after a
  * bean is fully deserialized, ensuring field sanitization happens automatically for incoming JSON.

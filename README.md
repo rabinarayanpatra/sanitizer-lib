@@ -9,7 +9,7 @@ consistency by automatically cleaning up fields on DTOs and entities before stor
 ## Features
 
 - **Core Annotations & API**
-    - `@SanitizeField(using = YourSanitizer.class)` to declare sanitization on individual fields.
+    - `@Sanitize(using = YourSanitizer.class)` to declare sanitization on individual fields.
     - `FieldSanitizer<T>` interface for custom sanitizers.
     - Built-in sanitizers:
         - `TrimSanitizer` (removes leading/trailing whitespace)
@@ -77,13 +77,12 @@ If you need JPA support, also add:
 ```java
 package com.example.dto;
 
-import io.github.rabinarayanpatra.sanitizer.annotation.SanitizeField;
+import io.github.rabinarayanpatra.sanitizer.annotation.Sanitize;
 import io.github.rabinarayanpatra.sanitizer.builtin.TrimSanitizer;
 import io.github.rabinarayanpatra.sanitizer.builtin.LowerCaseSanitizer;
 
 public class UserDto {
-  @SanitizeField( using = TrimSanitizer.class )
-  @SanitizeField( using = LowerCaseSanitizer.class )
+  @Sanitize( using = { TrimSanitizer.class, LowerCaseSanitizer.class } )
   private String email;
 
   // getters/setters...
@@ -98,7 +97,7 @@ automatically.
 ```java
 package com.example.entity;
 
-import io.github.rabinarayanpatra.sanitizer.annotation.SanitizeField;
+import io.github.rabinarayanpatra.sanitizer.annotation.Sanitize;
 import io.github.rabinarayanpatra.sanitizer.builtin.CreditCardMaskSanitizer;
 import io.github.rabinarayanpatra.sanitizer.jpa.SanitizationEntityListener;
 import jakarta.persistence.*;
@@ -110,7 +109,7 @@ public class Payment {
   @GeneratedValue
   private Long id;
 
-  @SanitizeField( using = CreditCardMaskSanitizer.class )
+  @Sanitize( using = CreditCardMaskSanitizer.class )
   private String cardNumber;
 
   // getters/setters...
@@ -125,26 +124,28 @@ On `repository.save(payment)`, the `cardNumber` will be masked (all but last 4 d
 
 1. **Implement `FieldSanitizer<T>`**:
 
-    ```java
-    package com.yourorg.sanitizer;
+   ```java
 
-    import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
-    import org.springframework.stereotype.Component;
+package com.yourorg.sanitizer;
 
-    @Component
-    public class MyCustomSanitizer implements FieldSanitizer<String> {
-        @Override
-        public String sanitize(String input) {
-            // Your logic here...
-            return input == null ? null : input.replaceAll("[^0-9]", "");
-        }
-    }
-    ```
+import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
+import org.springframework.stereotype.Component;
+
+@Component
+public class MyCustomSanitizer implements FieldSanitizer<String> {
+@Override
+public String sanitize( final String input) {
+// Your logic here...
+return input == null ? null : input.replaceAll("[^0-9]", "");
+}
+}
+
+```
 
 2. **Annotate your fields**:
 
     ```java
-    @SanitizeField(using = MyCustomSanitizer.class)
+    @Sanitize(using = MyCustomSanitizer.class )
     private String rawPhoneNumber;
     ```
 
@@ -162,10 +163,12 @@ On `repository.save(payment)`, the `cardNumber` will be masked (all but last 4 d
 ## Multi-Module Structure
 
 ```
-sanitizer-lib/             ← Parent POM (packaging=pom)
-├── sanitizer-core/        ← Core annotations, interfaces, built-ins
-├── sanitizer-spring/      ← Spring Boot auto-configuration & Jackson module
-└── sanitizer-jpa/         ← JPA EntityListener & converters
+
+sanitizer-lib/ ← Parent POM (packaging=pom)
+├── sanitizer-core/ ← Core annotations, interfaces, built-ins
+├── sanitizer-spring/ ← Spring Boot auto-configuration & Jackson module
+└── sanitizer-jpa/ ← JPA EntityListener & converters
+
 ```
 
 Each module is a Maven sub-module inheriting versions and dependency management from the parent.

@@ -16,8 +16,8 @@ import io.github.rabinarayanpatra.sanitizer.spring.registry.SanitizerRegistry;
  * Spring Boot autoconfiguration for the Sanitizer library.
  * <p>
  * This configuration class exposes all built-in {@link FieldSanitizer} implementations as Spring beans, registers a
- * {@link SanitizerRegistry} that holds them, and provides a Jackson {@link Module} for {@code @SanitizeField} support
- * during JSON deserialization.
+ * {@link SanitizerRegistry} that holds them, and provides a Jackson {@link Module} for {@code @Sanitize} support during
+ * JSON deserialization.
  *
  * @since 1.0.0
  */
@@ -164,11 +164,11 @@ public class SanitizerAutoConfiguration {
   }
 
   // ————————————————————————————————————————
-  // 3) Jackson module for @SanitizeField support
+  // 3) Jackson module for @Sanitize support
   // ————————————————————————————————————————
 
   /**
-   * Registers a Jackson module that applies {@code @SanitizeField} annotations during deserialization.
+   * Registers a Jackson module that applies {@code @Sanitize} annotations during deserialization.
    *
    * @return the configured Jackson {@link Module}
    */

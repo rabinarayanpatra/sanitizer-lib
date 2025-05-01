@@ -1,42 +1,45 @@
 package io.github.rabinarayanpatra.sanitizer.jpa;
 
+import io.github.rabinarayanpatra.sanitizer.annotation.Sanitize;
 import io.github.rabinarayanpatra.sanitizer.core.SanitizationUtils;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 
 /**
- * JPA entity listener that applies all {@link io.github.rabinarayanpatra.sanitizer.annotation.SanitizeField}
- * annotations to an entity before it is persisted or updated.
+ * JPA entity listener that automatically applies sanitization to any entity fields annotated with
+ * {@link Sanitize @Sanitize} before they are persisted or updated.
  * <p>
- * This listener automatically invokes {@link SanitizationUtils#apply(Object)} on any JPA entity to sanitize fields
- * marked with the appropriate annotations during {@code @PrePersist} and {@code @PreUpdate} lifecycle events.
+ * Internally this listener invokes {@link SanitizationUtils#apply(Object)} to run through all configured
+ * {@link io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer}s.
  *
- * <pre>
- * {@code
+ * <pre>{@code
  * @Entity
  * @EntityListeners(SanitizationEntityListener.class)
  * public class Customer {
- *   @SanitizeField(using = TrimSanitizer.class)
- *   private String name;
+ *
+ *     @Sanitize(using = TrimSanitizer.class)
+ *     @Sanitize(using = CollapseWhitespaceSanitizer.class)
+ *     private String name;
+ *
+ *     // getters/setters...
  * }
- * }
- * </pre>
+ * }</pre>
  *
  * @since 1.0.0
  */
 public class SanitizationEntityListener {
 
   /**
-   * Lifecycle hook invoked before persisting or updating a JPA entity.
+   * Lifecycle callback invoked by JPA before an entity is inserted or updated.
+   * <p>
+   * Calls {@link SanitizationUtils#apply(Object)} on the given entity instance, sanitizing any fields marked with
+   * {@link Sanitize @Sanitize}.
    *
-   * @param entity the entity being saved
+   * @param entity the entity instance about to be persisted or updated; never {@code null}
    */
   @PrePersist
   @PreUpdate
   public void onSave( final Object entity ) {
-    if( entity != null ) {
-      SanitizationUtils.apply( entity );
-    }
+    SanitizationUtils.apply( entity );
   }
 }
-

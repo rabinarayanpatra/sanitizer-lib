@@ -9,13 +9,14 @@ import org.springframework.context.annotation.Configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.github.rabinarayanpatra.sanitizer.annotation.SanitizeField;
+import io.github.rabinarayanpatra.sanitizer.annotation.Sanitize;
 import io.github.rabinarayanpatra.sanitizer.builtin.LowerCaseSanitizer;
 import io.github.rabinarayanpatra.sanitizer.builtin.TrimSanitizer;
+import io.github.rabinarayanpatra.sanitizer.spring.jackson.SanitizerModuleIntegrationTest.TestConfig;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest( classes = SanitizerModuleIntegrationTest.TestConfig.class )
+@SpringBootTest( classes = TestConfig.class )
 class SanitizerModuleIntegrationTest {
 
   @Autowired
@@ -23,8 +24,8 @@ class SanitizerModuleIntegrationTest {
 
   @Test
   void jsonDeserialization_appliesSanitizer() throws Exception {
-    String json = "{\"email\":\"  USER@EXAMPLE.COM  \"}";
-    SampleDto dto = mapper.readValue( json, SampleDto.class );
+    final String json = "{\"email\":\"  USER@EXAMPLE.COM  \"}";
+    final SampleDto dto = mapper.readValue( json, SampleDto.class );
     assertEquals( "user@example.com", dto.getEmail() );
   }
 
@@ -37,15 +38,14 @@ class SanitizerModuleIntegrationTest {
   }
 
   static class SampleDto {
-    @SanitizeField( using = TrimSanitizer.class )
-    @SanitizeField( using = LowerCaseSanitizer.class )
+    @Sanitize( using = { TrimSanitizer.class, LowerCaseSanitizer.class } )
     private String email;
 
     public String getEmail() {
       return email;
     }
 
-    public void setEmail( String email ) {
+    public void setEmail( final String email ) {
       this.email = email;
     }
   }

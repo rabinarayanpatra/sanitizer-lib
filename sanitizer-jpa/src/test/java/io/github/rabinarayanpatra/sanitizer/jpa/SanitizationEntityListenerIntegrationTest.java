@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import io.github.rabinarayanpatra.sanitizer.annotation.SanitizeField;
+import io.github.rabinarayanpatra.sanitizer.annotation.Sanitize;
 import io.github.rabinarayanpatra.sanitizer.builtin.CreditCardMaskSanitizer;
 import io.github.rabinarayanpatra.sanitizer.jpa.SanitizationEntityListenerIntegrationTest.TestConfig;
 import jakarta.persistence.Entity;
@@ -57,7 +57,7 @@ class SanitizationEntityListenerIntegrationTest {
     @GeneratedValue
     Long id;
 
-    @SanitizeField( using = CreditCardMaskSanitizer.class )
+    @Sanitize( using = CreditCardMaskSanitizer.class )
     private String cardNumber;
 
     // getters/setters…

@@ -15,11 +15,11 @@ consistency by automatically cleaning up fields on DTOs and entities before stor
         - `TrimSanitizer` (removes leading/trailing whitespace)
         - `LowerCaseSanitizer` (converts strings to lowercase)
         - `TitleCaseSanitizer` (capitalizes first character)
-        - `CreditCardMaskSanitizer` (masks all but last 4 digits of card numbers)
+        - `CreditCardMaskSanitizer` (masks all but last four digits of card numbers)
 - **Spring Boot Integration** (`sanitizer-spring`)
     - Jackson `SanitizerModule` auto-applies sanitization on JSON→DTO binding.
     - `SanitizerRegistry` for programmatic lookup of sanitizers as Spring beans.
-    - Auto-configuration via `spring.factories` – just add the starter to your classpath.
+    - Autoconfiguration via `spring.factories` – just add the starter to your classpath.
 - **JPA Integration** (`sanitizer-jpa`)
     - `SanitizationEntityListener` hooks into `@PrePersist` & `@PreUpdate` to sanitize entities automatically.
 - **Extensible & Configurable**
@@ -141,10 +141,7 @@ public class MyCustomSanitizer implements FieldSanitizer<String> {
 }
 ```
 
-2.**
-
-Annotate your
-fields**:
+2. **Annotate your fields**:
 
 ```java
 
@@ -153,9 +150,7 @@ private String rawPhoneNumber;
 
 ```
 
-3.**(Optional)
-
-Programmatic lookup**via `SanitizerRegistry`:
+3. **(Optional) Programmatic lookup**via `SanitizerRegistry`:
 
 ```java
 
@@ -167,9 +162,9 @@ String cleaned = registry.get( MyCustomSanitizer.class ).sanitize( rawInput );
 
 ---
 
-##Multi-
+##     
 
-Module Structure
+Multi-Module Structure
 
 ```
 sanitizer-lib/             ← Parent POM (packaging=pom)
@@ -178,7 +173,7 @@ sanitizer-lib/             ← Parent POM (packaging=pom)
 └── sanitizer-jpa/         ← JPA EntityListener & converters
 ```
 
-Each module is a Maven sub-module inheriting versions and dependency management from the parent.
+Each module is a Maven submodule inheriting versions and dependency management from the parent.
 
 ---
 

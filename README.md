@@ -124,51 +124,58 @@ On `repository.save(payment)`, the `cardNumber` will be masked (all but last 4 d
 
 1. **Implement `FieldSanitizer<T>`**:
 
-   ```java
-
-package com.yourorg.sanitizer;
+```java
+    package com.yourorg.sanitizer;
 
 import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
+
 import org.springframework.stereotype.Component;
 
 @Component
 public class MyCustomSanitizer implements FieldSanitizer<String> {
-@Override
-public String sanitize( final String input) {
-// Your logic here...
-return input == null ? null : input.replaceAll("[^0-9]", "");
+  @Override
+  public String sanitize( final String input ) {
+    // Your logic here...
+    return input == null ? null : input.replaceAll( "[^0-9]", "" );
+  }
 }
-}
+```
+
+        2.**
+
+Annotate your
+fields**:
+
+    ```java
+
+@Sanitize( using = MyCustomSanitizer.class )
+private String rawPhoneNumber;
 
 ```
 
-2. **Annotate your fields**:
+        3.**(Optional)
+
+Programmatic lookup**via `SanitizerRegistry`:
 
     ```java
-    @Sanitize(using = MyCustomSanitizer.class )
-    private String rawPhoneNumber;
-    ```
 
-3. **(Optional) Programmatic lookup** via `SanitizerRegistry`:
+@Autowired
+private SanitizerRegistry registry;
 
-    ```java
-    @Autowired
-    private SanitizerRegistry registry;
-
-    String cleaned = registry.get(MyCustomSanitizer.class).sanitize(rawInput);
-    ```
-
----
-
-## Multi-Module Structure
-
+String cleaned = registry.get( MyCustomSanitizer.class ).sanitize( rawInput );
 ```
 
-sanitizer-lib/ ← Parent POM (packaging=pom)
-├── sanitizer-core/ ← Core annotations, interfaces, built-ins
-├── sanitizer-spring/ ← Spring Boot auto-configuration & Jackson module
-└── sanitizer-jpa/ ← JPA EntityListener & converters
+        ---
 
+        ##Multi-
+
+Module Structure
+
+```
+sanitizer-lib/             ← Parent POM (packaging=pom)
+├── sanitizer-core/        ← Core annotations, interfaces, built-ins
+├── sanitizer-spring/      ← Spring Boot auto-configuration & Jackson module
+└── sanitizer-jpa/         ← JPA EntityListener & converters
 ```
 
 Each module is a Maven sub-module inheriting versions and dependency management from the parent.

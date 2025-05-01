@@ -7,7 +7,7 @@
     <parent>
         <groupId>io.github.rabinarayanpatra.sanitizer</groupId>
         <artifactId>sanitizer-lib</artifactId>
-        <version>1.0.7</version>
+        <version>1.0.8</version>
     </parent>
 
     <artifactId>sanitizer-jpa</artifactId>

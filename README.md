@@ -53,7 +53,7 @@ consistency by automatically cleaning up fields on DTOs and entities before stor
 <dependency>
     <groupId>io.github.rabinarayanpatra.sanitizer</groupId>
     <artifactId>sanitizer-spring</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.15</version>
 </dependency>
 ```
 
@@ -64,7 +64,7 @@ If you need JPA support, also add:
 <dependency>
     <groupId>io.github.rabinarayanpatra.sanitizer</groupId>
     <artifactId>sanitizer-jpa</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.15</version>
 </dependency>
 ```
 

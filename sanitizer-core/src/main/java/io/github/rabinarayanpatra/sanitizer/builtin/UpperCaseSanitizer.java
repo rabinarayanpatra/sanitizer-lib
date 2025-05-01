@@ -1,7 +1,5 @@
 package io.github.rabinarayanpatra.sanitizer.builtin;
 
-import org.springframework.stereotype.Component;
-
 import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
 
 /**
@@ -19,7 +17,6 @@ import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
  * @see FieldSanitizer
  * @since 1.0.0
  */
-@Component
 public class UpperCaseSanitizer implements FieldSanitizer<String> {
 
   /**

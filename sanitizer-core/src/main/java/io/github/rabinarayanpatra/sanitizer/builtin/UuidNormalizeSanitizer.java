@@ -2,8 +2,6 @@ package io.github.rabinarayanpatra.sanitizer.builtin;
 
 import java.util.UUID;
 
-import org.springframework.stereotype.Component;
-
 import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
 
 /**
@@ -23,7 +21,6 @@ import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
  * @see FieldSanitizer
  * @since 1.0.0
  */
-@Component
 public class UuidNormalizeSanitizer implements FieldSanitizer<String> {
 
   /**

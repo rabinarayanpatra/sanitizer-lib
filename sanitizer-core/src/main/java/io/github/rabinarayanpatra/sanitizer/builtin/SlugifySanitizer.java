@@ -3,8 +3,6 @@ package io.github.rabinarayanpatra.sanitizer.builtin;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 
-import org.springframework.stereotype.Component;
-
 import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
 
 /**
@@ -23,7 +21,6 @@ import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
  * @see FieldSanitizer
  * @since 1.0.0
  */
-@Component
 public class SlugifySanitizer implements FieldSanitizer<String> {
 
   /**

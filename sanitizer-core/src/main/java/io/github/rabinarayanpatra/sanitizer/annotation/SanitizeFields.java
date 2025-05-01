@@ -21,7 +21,6 @@ import java.lang.annotation.Target;
  * }
  * </pre>
  *
- * @return an array of {@link SanitizeField} annotations to apply
  * @since 1.0.0
  */
 @Retention( RetentionPolicy.RUNTIME )

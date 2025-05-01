@@ -26,7 +26,6 @@ import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
  * }
  * </pre>
  *
- * @return the {@link FieldSanitizer} class to use for this field
  * @since 1.0.0
  */
 

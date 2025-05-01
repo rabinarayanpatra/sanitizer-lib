@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
 
@@ -17,7 +16,6 @@ import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
  *
  * @since 1.0.0
  */
-@Component
 public class SanitizerRegistry {
 
   /**

@@ -1,12 +1,16 @@
 package io.github.rabinarayanpatra.sanitizer.spring.config;
 
+import java.util.List;
+
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.fasterxml.jackson.databind.Module;
 
+import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
 import io.github.rabinarayanpatra.sanitizer.spring.jackson.SanitizerModule;
+import io.github.rabinarayanpatra.sanitizer.spring.registry.SanitizerRegistry;
 
 /**
  * Spring Boot autoconfiguration that registers the {@link SanitizerModule} with Jackson.
@@ -20,6 +24,12 @@ import io.github.rabinarayanpatra.sanitizer.spring.jackson.SanitizerModule;
 @AutoConfiguration
 public class SanitizerAutoConfiguration {
 
+  private final List<FieldSanitizer<?>> sanitizers;
+
+  public SanitizerAutoConfiguration( final List<FieldSanitizer<?>> sanitizers ) {
+    this.sanitizers = sanitizers;
+  }
+
   /**
    * Registers the custom Jackson module for applying field sanitization during deserialization.
    *
@@ -28,5 +38,10 @@ public class SanitizerAutoConfiguration {
   @Bean
   public Module sanitizerModule() {
     return new SanitizerModule();
+  }
+
+  @Bean
+  public SanitizerRegistry sanitizerRegistry() {
+    return new SanitizerRegistry( sanitizers );
   }
 }

@@ -35,5 +35,12 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        
+        <!-- generates the AutoConfiguration.imports file at compile time -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>

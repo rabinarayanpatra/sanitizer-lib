@@ -125,7 +125,7 @@ On `repository.save(payment)`, the `cardNumber` will be masked (all but last 4 d
 1. **Implement `FieldSanitizer<T>`**:
 
 ```java
-    package com.yourorg.sanitizer;
+package com.yourorg.sanitizer;
 
 import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
 
@@ -141,23 +141,23 @@ public class MyCustomSanitizer implements FieldSanitizer<String> {
 }
 ```
 
-        2.**
+2.**
 
 Annotate your
 fields**:
 
-    ```java
+```java
 
 @Sanitize( using = MyCustomSanitizer.class )
 private String rawPhoneNumber;
 
 ```
 
-        3.**(Optional)
+3.**(Optional)
 
 Programmatic lookup**via `SanitizerRegistry`:
 
-    ```java
+```java
 
 @Autowired
 private SanitizerRegistry registry;
@@ -165,9 +165,9 @@ private SanitizerRegistry registry;
 String cleaned = registry.get( MyCustomSanitizer.class ).sanitize( rawInput );
 ```
 
-        ---
+---
 
-        ##Multi-
+##Multi-
 
 Module Structure
 

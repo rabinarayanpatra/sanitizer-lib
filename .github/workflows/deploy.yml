@@ -4,6 +4,12 @@ on:
   push:
     branches:
       - master
+    paths-ignore:
+      - 'LICENSE.md'
+      - 'README.md'
+      - '*.md'
+      - 'docs/**'
+      - '.github/*.md'
 
 permissions:
   contents: write

@@ -1,55 +1,59 @@
 # Sanitizer-Lib
 
-**Sanitizer-Lib** is a production-grade, extensible input sanitization library for Java applications, with first-class
-support for Spring Boot (JSON deserialization) and JPA (entity persistence). It helps you enforce data cleanliness and
-consistency by automatically cleaning up fields on DTOs and entities before storage or processing.
+## Overview
 
----
+Sanitizer-Lib is an enterprise-grade input sanitization framework for Java applications that provides comprehensive integration with Spring Boot and JPA. The library enforces data integrity and consistency by implementing automatic field sanitization on DTOs and entities prior to processing or persistence.
 
-## Features
+## Core Capabilities
 
-- **Core Annotations & API**
-    - `@Sanitize(using = YourSanitizer.class)` to declare sanitization on individual fields.
-    - `FieldSanitizer<T>` interface for custom sanitizers.
-    - Built-in sanitizers:
-        - `TrimSanitizer` (removes leading/trailing whitespace)
-        - `LowerCaseSanitizer` (converts strings to lowercase)
-        - `TitleCaseSanitizer` (capitalizes first character)
-        - `CreditCardMaskSanitizer` (masks all but last four digits of card numbers)
-- **Spring Boot Integration** (`sanitizer-spring`)
-    - Jackson `SanitizerModule` auto-applies sanitization on JSON→DTO binding.
-    - `SanitizerRegistry` for programmatic lookup of sanitizers as Spring beans.
-    - Autoconfiguration via `spring.factories` – just add the starter to your classpath.
-- **JPA Integration** (`sanitizer-jpa`)
-    - `SanitizationEntityListener` hooks into `@PrePersist` & `@PreUpdate` to sanitize entities automatically.
-- **Extensible & Configurable**
-    - Implement `FieldSanitizer<T>` and annotate fields, or register your own beans.
-    - Fully annotation-driven; no XML or manual wiring required.
+### Annotations & API
 
----
+- **`@Sanitize(using = Class<? extends FieldSanitizer>[])`**: Declarative annotation for field-level sanitization
+- **`FieldSanitizer<T>`**: Core interface for implementing custom sanitization logic
 
-## Modules
+### Built-in Sanitizers
 
-| Module               | Purpose                                             |
-|----------------------|-----------------------------------------------------|
-| **sanitizer-core**   | Core API, annotations, utils & built-in sanitizers. |
-| **sanitizer-spring** | Spring Boot auto-config & Jackson integration.      |
-| **sanitizer-jpa**    | JPA entity listener for database sanitization.      |
+| Sanitizer | Purpose |
+|-----------|---------|
+| `TrimSanitizer` | Eliminates leading and trailing whitespace |
+| `LowerCaseSanitizer` | Normalizes text to lowercase |
+| `TitleCaseSanitizer` | Capitalizes the first character of text |
+| `CreditCardMaskSanitizer` | Secures card numbers by displaying only the last four digits |
 
----
+### Framework Integration
 
-## Getting Started
+- **Spring Boot** (`sanitizer-spring`)
+  - Jackson `SanitizerModule` for automatic sanitization during deserialization
+  - Spring-managed `SanitizerRegistry` for programmatic sanitizer resolution
+  - Zero-configuration setup via Spring Boot autoconfiguration
 
-### Requirements
+- **JPA** (`sanitizer-jpa`)
+  - `SanitizationEntityListener` automatically invoked during `@PrePersist` and `@PreUpdate` lifecycle events
+  - Seamless integration with existing entity models
+
+### Architecture
+
+The library follows a modular design with clear separation of concerns:
+
+| Module | Responsibility |
+|--------|----------------|
+| **sanitizer-core** | Core API, annotations, utilities, and standard sanitizers |
+| **sanitizer-spring** | Spring Boot integration with autoconfiguration support |
+| **sanitizer-jpa** | JPA entity lifecycle integration |
+
+## Technical Requirements
 
 - Java 21 (LTS)
 - Maven 3.8+
-- (Optional) Spring Boot 3.4.x if using Spring integration
+- Spring Boot 3.4.x (for Spring integration)
 
-### Add Dependency
+## Implementation Guide
+
+### Dependency Configuration
+
+#### Spring Boot Integration
 
 ```xml
-
 <dependency>
     <groupId>io.github.rabinarayanpatra.sanitizer</groupId>
     <artifactId>sanitizer-spring</artifactId>
@@ -57,10 +61,9 @@ consistency by automatically cleaning up fields on DTOs and entities before stor
 </dependency>
 ```
 
-If you need JPA support, also add:
+#### JPA Integration (Optional)
 
 ```xml
-
 <dependency>
     <groupId>io.github.rabinarayanpatra.sanitizer</groupId>
     <artifactId>sanitizer-jpa</artifactId>
@@ -68,11 +71,9 @@ If you need JPA support, also add:
 </dependency>
 ```
 
----
+## Implementation Examples
 
-## Usage Examples
-
-### JSON Deserialization (Spring MVC / WebFlux)
+### REST API DTOs (Spring Boot)
 
 ```java
 package com.example.dto;
@@ -82,17 +83,16 @@ import io.github.rabinarayanpatra.sanitizer.builtin.TrimSanitizer;
 import io.github.rabinarayanpatra.sanitizer.builtin.LowerCaseSanitizer;
 
 public class UserDto {
-  @Sanitize( using = { TrimSanitizer.class, LowerCaseSanitizer.class } )
-  private String email;
+    @Sanitize(using = {TrimSanitizer.class, LowerCaseSanitizer.class})
+    private String email;
 
-  // getters/setters...
+    // Standard getters and setters
 }
 ```
 
-When Spring Boot deserializes incoming JSON into `UserDto`, the `email` field will be trimmed and lower-cased
-automatically.
+The framework automatically applies the sanitization chain (trim, then lowercase) when Spring deserializes JSON payloads into the `UserDto` object.
 
-### JPA Entities
+### Persistent Entities (JPA)
 
 ```java
 package com.example.entity;
@@ -103,100 +103,88 @@ import io.github.rabinarayanpatra.sanitizer.jpa.SanitizationEntityListener;
 import jakarta.persistence.*;
 
 @Entity
-@EntityListeners( SanitizationEntityListener.class )
+@EntityListeners(SanitizationEntityListener.class)
 public class Payment {
-  @Id
-  @GeneratedValue
-  private Long id;
+    @Id
+    @GeneratedValue
+    private Long id;
 
-  @Sanitize( using = CreditCardMaskSanitizer.class )
-  private String cardNumber;
+    @Sanitize(using = CreditCardMaskSanitizer.class)
+    private String cardNumber;
 
-  // getters/setters...
+    // Standard getters and setters
 }
 ```
 
-On `repository.save(payment)`, the `cardNumber` will be masked (all but last 4 digits) before being persisted.
+When the entity is persisted or updated, the framework automatically masks the credit card number, enhancing security compliance.
 
----
+## Extending the Framework
 
-## Creating Custom Sanitizers
+### Custom Sanitizer Implementation
 
-1. **Implement `FieldSanitizer<T>`**:
+1. **Create a Sanitizer Implementation**:
 
 ```java
 package com.yourorg.sanitizer;
 
 import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
-
 import org.springframework.stereotype.Component;
 
 @Component
-public class MyCustomSanitizer implements FieldSanitizer<String> {
-  @Override
-  public String sanitize( final String input ) {
-    // Your logic here...
-    return input == null ? null : input.replaceAll( "[^0-9]", "" );
-  }
+public class NumericOnlySanitizer implements FieldSanitizer<String> {
+    @Override
+    public String sanitize(final String input) {
+        return input == null ? null : input.replaceAll("[^0-9]", "");
+    }
 }
 ```
 
-2. **Annotate your fields**:
+2. **Apply to Domain Fields**:
 
 ```java
-
-@Sanitize( using = MyCustomSanitizer.class )
-private String rawPhoneNumber;
-
+@Sanitize(using = NumericOnlySanitizer.class)
+private String phoneNumber;
 ```
 
-3. **(Optional) Programmatic lookup**via `SanitizerRegistry`:
+3. **Programmatic Usage** (when needed):
 
 ```java
-
 @Autowired
 private SanitizerRegistry registry;
 
-String cleaned = registry.get( MyCustomSanitizer.class ).sanitize( rawInput );
+public String processInput(String rawPhoneNumber) {
+    return registry.get(NumericOnlySanitizer.class).sanitize(rawPhoneNumber);
+}
 ```
 
----
-
-##     
-
-Multi-Module Structure
+## Project Architecture
 
 ```
-sanitizer-lib/             ← Parent POM (packaging=pom)
-├── sanitizer-core/        ← Core annotations, interfaces, built-ins
-├── sanitizer-spring/      ← Spring Boot auto-configuration & Jackson module
-└── sanitizer-jpa/         ← JPA EntityListener & converters
+sanitizer-lib/             ← Parent project (packaging=pom)
+├── sanitizer-core/        ← Core API and standard implementations
+├── sanitizer-spring/      ← Spring Boot integration components
+└── sanitizer-jpa/         ← JPA persistence integration
 ```
 
-Each module is a Maven submodule inheriting versions and dependency management from the parent.
+Each module maintains its own dependency set while inheriting common configuration from the parent POM.
 
----
+## Release Management
 
-## Publishing & CI/CD
+- **Version Strategy**: Adheres to [Semantic Versioning](https://semver.org/) principles
+- **Artifact Publishing**: Automated deployment to Maven Central via GitHub Actions
+- **CI/CD Pipeline**: See `.github/workflows/maven-publish.yml` for implementation details
 
-- **Versioning**: Follows [Semantic Versioning](https://semver.org/). Tag releases as `v1.0.0`, `v1.1.0`, etc.
-- **Maven Central**: Use GitHub Actions to `mvn deploy` on tag push with OSSRH/GPG credentials.
-- **GitHub Workflow Skeleton**: see `.github/workflows/maven-publish.yml`.
-
----
-
-## Contributing
+## Contribution Guidelines
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/your-feature`)
-3. Commit your changes (`git commit -m 'feat: your feature'`)
-4. Push to your branch (`git push origin feature/your-feature`)
-5. Open a pull request
+2. Create a feature branch (`git checkout -b feature/enhancement-name`)
+3. Implement changes with appropriate test coverage
+4. Commit using conventional commits (`git commit -m 'feat: enhancement description'`)
+5. Push changes (`git push origin feature/enhancement-name`)
+6. Submit a pull request
 
-Please follow the existing coding style and add unit/integration tests for new features.
-
----
+All contributions must adhere to the established code style and include suitable test coverage.
 
 ## License
 
-Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

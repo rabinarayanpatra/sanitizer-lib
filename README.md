@@ -1,5 +1,7 @@
 # Sanitizer-Lib
 
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.rabinarayanpatra.sanitizer/sanitizer-core.svg)](https://central.sonatype.com/artifact/io.github.rabinarayanpatra.sanitizer/sanitizer-core)
+
 ## Overview
 
 Sanitizer-Lib is an enterprise-grade input sanitization framework for Java applications that provides comprehensive integration with Spring Boot and JPA. The library enforces data integrity and consistency by implementing automatic field sanitization on DTOs and entities prior to processing or persistence.

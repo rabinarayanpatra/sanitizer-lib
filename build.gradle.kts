@@ -85,7 +85,14 @@ subprojects {
     }
 
     configure<SigningExtension> {
-        useGpgCmd()
+        val signingKey = System.getenv("SIGNING_KEY") ?: project.findProperty("signingKey") as String?
+        val signingPassword = System.getenv("SIGNING_PASSWORD") ?: project.findProperty("signingPassword") as String?
+
+        if (signingKey != null && signingPassword != null) {
+            useInMemoryPgpKeys(signingKey, signingPassword)
+        } else {
+            useGpgCmd()
+        }
         sign(publishing.publications["maven"])
     }
 

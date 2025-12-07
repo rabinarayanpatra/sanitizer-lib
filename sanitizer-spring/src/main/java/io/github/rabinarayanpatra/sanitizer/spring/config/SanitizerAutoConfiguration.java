@@ -15,165 +15,204 @@ import io.github.rabinarayanpatra.sanitizer.spring.registry.SanitizerRegistry;
 /**
  * Spring Boot autoconfiguration for the Sanitizer library.
  * <p>
- * This configuration class exposes all built-in {@link FieldSanitizer} implementations as Spring beans, registers a
- * {@link SanitizerRegistry} that holds them, and provides a Jackson {@link Module} for {@code @Sanitize} support during
- * JSON deserialization.
+ * This configuration class exposes all built-in {@link FieldSanitizer}
+ * implementations as Spring beans, registers a {@link SanitizerRegistry} that
+ * holds them, and provides a Jackson {@link Module} for {@code @Sanitize}
+ * support during JSON deserialization.
  *
  * @since 1.0.0
  */
 @AutoConfiguration
 public class SanitizerAutoConfiguration {
 
-  // ————————————————————————————————————————
-  // 1) Register all built-in sanitizers as beans
-  // ————————————————————————————————————————
+	/**
+	 * Default constructor.
+	 */
+	public SanitizerAutoConfiguration() {
+	}
 
-  /**
-   * @return a {@link CollapseWhitespaceSanitizer} bean
-   */
-  @Bean
-  public FieldSanitizer<String> collapseWhitespaceSanitizer() {
-    return new CollapseWhitespaceSanitizer();
-  }
+	// ————————————————————————————————————————
+	// 1) Register all built-in sanitizers as beans
+	// ————————————————————————————————————————
 
-  /**
-   * @return a {@link CreditCardMaskSanitizer} bean
-   */
-  @Bean
-  public FieldSanitizer<String> creditCardMaskSanitizer() {
-    return new CreditCardMaskSanitizer();
-  }
+	/**
+	 * Creates a {@link CollapseWhitespaceSanitizer} bean.
+	 *
+	 * @return a {@link CollapseWhitespaceSanitizer} bean
+	 */
+	@Bean
+	public FieldSanitizer<String> collapseWhitespaceSanitizer() {
+		return new CollapseWhitespaceSanitizer();
+	}
 
-  /**
-   * @return an {@link EmailAliasStripSanitizer} bean
-   */
-  @Bean
-  public FieldSanitizer<String> emailAliasStripSanitizer() {
-    return new EmailAliasStripSanitizer();
-  }
+	/**
+	 * Creates a {@link CreditCardMaskSanitizer} bean.
+	 *
+	 * @return a {@link CreditCardMaskSanitizer} bean
+	 */
+	@Bean
+	public FieldSanitizer<String> creditCardMaskSanitizer() {
+		return new CreditCardMaskSanitizer();
+	}
 
-  /**
-   * @return an {@link HtmlEscapeSanitizer} bean
-   */
-  @Bean
-  public FieldSanitizer<String> htmlEscapeSanitizer() {
-    return new HtmlEscapeSanitizer();
-  }
+	/**
+	 * Creates an {@link EmailAliasStripSanitizer} bean.
+	 *
+	 * @return an {@link EmailAliasStripSanitizer} bean
+	 */
+	@Bean
+	public FieldSanitizer<String> emailAliasStripSanitizer() {
+		return new EmailAliasStripSanitizer();
+	}
 
-  /**
-   * @return an {@link IBANMaskSanitizer} bean
-   */
-  @Bean
-  public FieldSanitizer<String> ibanMaskSanitizer() {
-    return new IBANMaskSanitizer();
-  }
+	/**
+	 * Creates an {@link HtmlEscapeSanitizer} bean.
+	 *
+	 * @return an {@link HtmlEscapeSanitizer} bean
+	 */
+	@Bean
+	public FieldSanitizer<String> htmlEscapeSanitizer() {
+		return new HtmlEscapeSanitizer();
+	}
 
-  /**
-   * @return a {@link LowerCaseSanitizer} bean
-   */
-  @Bean
-  public FieldSanitizer<String> lowerCaseSanitizer() {
-    return new LowerCaseSanitizer();
-  }
+	/**
+	 * Creates an {@link IBANMaskSanitizer} bean.
+	 *
+	 * @return an {@link IBANMaskSanitizer} bean
+	 */
+	@Bean
+	public FieldSanitizer<String> ibanMaskSanitizer() {
+		return new IBANMaskSanitizer();
+	}
 
-  /**
-   * @return a {@link NullIfBlankSanitizer} bean
-   */
-  @Bean
-  public FieldSanitizer<String> nullIfBlankSanitizer() {
-    return new NullIfBlankSanitizer();
-  }
+	/**
+	 * Creates a {@link LowerCaseSanitizer} bean.
+	 *
+	 * @return a {@link LowerCaseSanitizer} bean
+	 */
+	@Bean
+	public FieldSanitizer<String> lowerCaseSanitizer() {
+		return new LowerCaseSanitizer();
+	}
 
-  /**
-   * @return a {@link PhoneE164Sanitizer} bean
-   */
-  @Bean
-  public FieldSanitizer<String> phoneE164Sanitizer() {
-    return new PhoneE164Sanitizer();
-  }
+	/**
+	 * Creates a {@link NullIfBlankSanitizer} bean.
+	 *
+	 * @return a {@link NullIfBlankSanitizer} bean
+	 */
+	@Bean
+	public FieldSanitizer<String> nullIfBlankSanitizer() {
+		return new NullIfBlankSanitizer();
+	}
 
-  /**
-   * @return a {@link SafeFilenameSanitizer} bean
-   */
-  @Bean
-  public FieldSanitizer<String> safeFilenameSanitizer() {
-    return new SafeFilenameSanitizer();
-  }
+	/**
+	 * Creates a {@link PhoneE164Sanitizer} bean.
+	 *
+	 * @return a {@link PhoneE164Sanitizer} bean
+	 */
+	@Bean
+	public FieldSanitizer<String> phoneE164Sanitizer() {
+		return new PhoneE164Sanitizer();
+	}
 
-  /**
-   * @return a {@link SlugifySanitizer} bean
-   */
-  @Bean
-  public FieldSanitizer<String> slugifySanitizer() {
-    return new SlugifySanitizer();
-  }
+	/**
+	 * Creates a {@link SafeFilenameSanitizer} bean.
+	 *
+	 * @return a {@link SafeFilenameSanitizer} bean
+	 */
+	@Bean
+	public FieldSanitizer<String> safeFilenameSanitizer() {
+		return new SafeFilenameSanitizer();
+	}
 
-  /**
-   * @return an {@link SSNMaskSanitizer} bean
-   */
-  @Bean
-  public FieldSanitizer<String> ssnMaskSanitizer() {
-    return new SSNMaskSanitizer();
-  }
+	/**
+	 * Creates a {@link SlugifySanitizer} bean.
+	 *
+	 * @return a {@link SlugifySanitizer} bean
+	 */
+	@Bean
+	public FieldSanitizer<String> slugifySanitizer() {
+		return new SlugifySanitizer();
+	}
 
-  /**
-   * @return a {@link TitleCaseSanitizer} bean
-   */
-  @Bean
-  public FieldSanitizer<String> titleCaseSanitizer() {
-    return new TitleCaseSanitizer();
-  }
+	/**
+	 * Creates an {@link SSNMaskSanitizer} bean.
+	 *
+	 * @return an {@link SSNMaskSanitizer} bean
+	 */
+	@Bean
+	public FieldSanitizer<String> ssnMaskSanitizer() {
+		return new SSNMaskSanitizer();
+	}
 
-  /**
-   * @return a {@link TrimSanitizer} bean
-   */
-  @Bean
-  public FieldSanitizer<String> trimSanitizer() {
-    return new TrimSanitizer();
-  }
+	/**
+	 * Creates a {@link TitleCaseSanitizer} bean.
+	 *
+	 * @return a {@link TitleCaseSanitizer} bean
+	 */
+	@Bean
+	public FieldSanitizer<String> titleCaseSanitizer() {
+		return new TitleCaseSanitizer();
+	}
 
-  /**
-   * @return an {@link UpperCaseSanitizer} bean
-   */
-  @Bean
-  public FieldSanitizer<String> upperCaseSanitizer() {
-    return new UpperCaseSanitizer();
-  }
+	/**
+	 * Creates a {@link TrimSanitizer} bean.
+	 *
+	 * @return a {@link TrimSanitizer} bean
+	 */
+	@Bean
+	public FieldSanitizer<String> trimSanitizer() {
+		return new TrimSanitizer();
+	}
 
-  /**
-   * @return a {@link UuidNormalizeSanitizer} bean
-   */
-  @Bean
-  public FieldSanitizer<String> uuidNormalizeSanitizer() {
-    return new UuidNormalizeSanitizer();
-  }
+	/**
+	 * Creates an {@link UpperCaseSanitizer} bean.
+	 *
+	 * @return an {@link UpperCaseSanitizer} bean
+	 */
+	@Bean
+	public FieldSanitizer<String> upperCaseSanitizer() {
+		return new UpperCaseSanitizer();
+	}
 
-  // ————————————————————————————————————————
-  // 2) Registry that aggregates all sanitizers
-  // ————————————————————————————————————————
+	/**
+	 * Creates a {@link UuidNormalizeSanitizer} bean.
+	 *
+	 * @return a {@link UuidNormalizeSanitizer} bean
+	 */
+	@Bean
+	public FieldSanitizer<String> uuidNormalizeSanitizer() {
+		return new UuidNormalizeSanitizer();
+	}
 
-  /**
-   * Builds a registry that holds all discovered sanitizer beans.
-   *
-   * @param sanitizers list of all registered {@link FieldSanitizer} beans
-   * @return a new {@link SanitizerRegistry}
-   */
-  @Bean
-  public SanitizerRegistry sanitizerRegistry( final List<FieldSanitizer<?>> sanitizers ) {
-    return new SanitizerRegistry( sanitizers );
-  }
+	// ————————————————————————————————————————
+	// 2) Registry that aggregates all sanitizers
+	// ————————————————————————————————————————
 
-  // ————————————————————————————————————————
-  // 3) Jackson module for @Sanitize support
-  // ————————————————————————————————————————
+	/**
+	 * Builds a registry that holds all discovered sanitizer beans.
+	 *
+	 * @param sanitizers
+	 *                   list of all registered {@link FieldSanitizer} beans
+	 * @return a new {@link SanitizerRegistry}
+	 */
+	@Bean
+	public SanitizerRegistry sanitizerRegistry(final List<FieldSanitizer<?>> sanitizers) {
+		return new SanitizerRegistry(sanitizers);
+	}
 
-  /**
-   * Registers a Jackson module that applies {@code @Sanitize} annotations during deserialization.
-   *
-   * @return the configured Jackson {@link Module}
-   */
-  @Bean
-  public Module sanitizerModule() {
-    return new SanitizerModule();
-  }
+	// ————————————————————————————————————————
+	// 3) Jackson module for @Sanitize support
+	// ————————————————————————————————————————
+
+	/**
+	 * Registers a Jackson module that applies {@code @Sanitize} annotations during
+	 * deserialization.
+	 *
+	 * @return the configured Jackson {@link Module}
+	 */
+	@Bean
+	public Module sanitizerModule() {
+		return new SanitizerModule();
+	}
 }

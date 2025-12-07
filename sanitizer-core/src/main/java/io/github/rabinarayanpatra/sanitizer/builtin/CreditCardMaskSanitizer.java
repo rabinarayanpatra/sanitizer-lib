@@ -3,10 +3,12 @@ package io.github.rabinarayanpatra.sanitizer.builtin;
 import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
 
 /**
- * Sanitizer that masks a credit card number by retaining only the last four digits.
+ * Sanitizer that masks a credit card number by retaining only the last four
+ * digits.
  * <p>
- * Non-digit characters are removed before masking. The output format is {@code **** **** **** 1234}, making it safe for
- * logging or display in user interfaces.
+ * Non-digit characters are removed before masking. The output format is
+ * {@code **** **** **** 1234}, making it safe for logging or display in user
+ * interfaces.
  *
  * <pre>
  * {@code
@@ -20,25 +22,32 @@ import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
  */
 public class CreditCardMaskSanitizer implements FieldSanitizer<String> {
 
-  /**
-   * Masks all but the last four digits of a credit card number.
-   *
-   * @param input the credit card number as a string
-   * @return the masked credit card string, or {@code "****"} if fewer than four digits remain; returns {@code null} if
-   * the input is {@code null}
-   */
-  @Override
-  public String sanitize( final String input ) {
-    if( input == null ) {
-      return null;
-    }
+	/**
+	 * Default constructor.
+	 */
+	public CreditCardMaskSanitizer() {
+	}
 
-    final String digits = input.replaceAll( "\\D", "" );
-    if( digits.length() <= 4 ) {
-      return "****";
-    }
+	/**
+	 * Masks all but the last four digits of a credit card number.
+	 *
+	 * @param input
+	 *              the credit card number as a string
+	 * @return the masked credit card string, or {@code "****"} if fewer than four
+	 *         digits remain; returns {@code null} if the input is {@code null}
+	 */
+	@Override
+	public String sanitize(final String input) {
+		if (input == null) {
+			return null;
+		}
 
-    final String last4 = digits.substring( digits.length() - 4 );
-    return "**** **** **** " + last4;
-  }
+		final String digits = input.replaceAll("\\D", "");
+		if (digits.length() <= 4) {
+			return "****";
+		}
+
+		final String last4 = digits.substring(digits.length() - 4);
+		return "**** **** **** " + last4;
+	}
 }

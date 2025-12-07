@@ -16,37 +16,37 @@ import io.github.rabinarayanpatra.sanitizer.spring.jackson.SanitizerModuleIntegr
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest( classes = TestConfig.class )
+@SpringBootTest(classes = TestConfig.class)
 class SanitizerModuleIntegrationTest {
 
-  @Autowired
-  ObjectMapper mapper;
+	@Autowired
+	ObjectMapper mapper;
 
-  @Test
-  void jsonDeserialization_appliesSanitizer() throws Exception {
-    final String json = "{\"email\":\"  USER@EXAMPLE.COM  \"}";
-    final SampleDto dto = mapper.readValue( json, SampleDto.class );
-    assertEquals( "user@example.com", dto.getEmail() );
-  }
+	@Test
+	void jsonDeserialization_appliesSanitizer() throws Exception {
+		final String json = "{\"email\":\"  USER@EXAMPLE.COM  \"}";
+		final SampleDto dto = mapper.readValue(json, SampleDto.class);
+		assertEquals("user@example.com", dto.getEmail());
+	}
 
-  @Configuration
-  @EnableAutoConfiguration
-  @ComponentScan( basePackages = "io.github.rabinarayanpatra.sanitizer" )
-  static class TestConfig {
-    // Enables auto-config + picks up our @Component sanitizers,
-    // the Jackson module via spring.factories, and the core classes.
-  }
+	@Configuration
+	@EnableAutoConfiguration
+	@ComponentScan(basePackages = "io.github.rabinarayanpatra.sanitizer")
+	static class TestConfig {
+		// Enables auto-config + picks up our @Component sanitizers,
+		// the Jackson module via spring.factories, and the core classes.
+	}
 
-  static class SampleDto {
-    @Sanitize( using = { TrimSanitizer.class, LowerCaseSanitizer.class } )
-    private String email;
+	static class SampleDto {
+		@Sanitize(using = {TrimSanitizer.class, LowerCaseSanitizer.class})
+		private String email;
 
-    public String getEmail() {
-      return email;
-    }
+		public String getEmail() {
+			return email;
+		}
 
-    public void setEmail( final String email ) {
-      this.email = email;
-    }
-  }
+		public void setEmail(final String email) {
+			this.email = email;
+		}
+	}
 }

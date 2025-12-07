@@ -3,10 +3,12 @@ package io.github.rabinarayanpatra.sanitizer.builtin;
 import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
 
 /**
- * Sanitizer that replaces characters not allowed in most filenames with underscores.
+ * Sanitizer that replaces characters not allowed in most filenames with
+ * underscores.
  * <p>
- * This includes characters like {@code \ / : * ? " < > |}, which are restricted on Windows and other common
- * filesystems. Useful for safely storing user-generated filenames or exporting reports.
+ * This includes characters like {@code \ / : * ? " < > |}, which are restricted
+ * on Windows and other common filesystems. Useful for safely storing
+ * user-generated filenames or exporting reports.
  *
  * <pre>
  * {@code
@@ -20,18 +22,25 @@ import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
  */
 public class SafeFilenameSanitizer implements FieldSanitizer<String> {
 
-  /**
-   * Replaces filesystem-reserved characters with underscores in the input string.
-   *
-   * @param in the proposed filename string
-   * @return a sanitized filename-safe string, or {@code null} if input is {@code null}
-   */
-  @Override
-  public String sanitize( final String in ) {
-    if( in == null ) {
-      return null;
-    }
-    return in.trim().replaceAll( "[\\\\/:*?\"<>|]", "_" );
-  }
-}
+	/**
+	 * Default constructor.
+	 */
+	public SafeFilenameSanitizer() {
+	}
 
+	/**
+	 * Replaces filesystem-reserved characters with underscores in the input string.
+	 *
+	 * @param in
+	 *           the proposed filename string
+	 * @return a sanitized filename-safe string, or {@code null} if input is
+	 *         {@code null}
+	 */
+	@Override
+	public String sanitize(final String in) {
+		if (in == null) {
+			return null;
+		}
+		return in.trim().replaceAll("[\\\\/:*?\"<>|]", "_");
+	}
+}

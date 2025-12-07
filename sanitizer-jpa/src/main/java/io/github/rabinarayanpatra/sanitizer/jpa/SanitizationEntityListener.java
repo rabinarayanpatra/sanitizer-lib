@@ -6,40 +6,53 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 
 /**
- * JPA entity listener that automatically applies sanitization to any entity fields annotated with
- * {@link Sanitize @Sanitize} before they are persisted or updated.
+ * JPA entity listener that automatically applies sanitization to any entity
+ * fields annotated with {@link Sanitize @Sanitize} before they are persisted or
+ * updated.
  * <p>
- * Internally this listener invokes {@link SanitizationUtils#apply(Object)} to run through all configured
+ * Internally this listener invokes {@link SanitizationUtils#apply(Object)} to
+ * run through all configured
  * {@link io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer}s.
  *
- * <pre>{@code
- * @Entity
- * @EntityListeners(SanitizationEntityListener.class)
- * public class Customer {
+ * <pre>
+ * {
+ * 	&#64;code
+ * 	&#64;Entity
+ * 	&#64;EntityListeners(SanitizationEntityListener.class)
+ * 	public class Customer {
  *
- *     @Sanitize(using = TrimSanitizer.class)
- *     @Sanitize(using = CollapseWhitespaceSanitizer.class)
- *     private String name;
+ * 		&#64;Sanitize(using = TrimSanitizer.class)
+ * 		&#64;Sanitize(using = CollapseWhitespaceSanitizer.class)
+ * 		private String name;
  *
- *     // getters/setters...
+ * 		// getters/setters...
+ * 	}
  * }
- * }</pre>
+ * </pre>
  *
  * @since 1.0.0
  */
 public class SanitizationEntityListener {
 
-  /**
-   * Lifecycle callback invoked by JPA before an entity is inserted or updated.
-   * <p>
-   * Calls {@link SanitizationUtils#apply(Object)} on the given entity instance, sanitizing any fields marked with
-   * {@link Sanitize @Sanitize}.
-   *
-   * @param entity the entity instance about to be persisted or updated; never {@code null}
-   */
-  @PrePersist
-  @PreUpdate
-  public void onSave( final Object entity ) {
-    SanitizationUtils.apply( entity );
-  }
+	/**
+	 * Default constructor.
+	 */
+	public SanitizationEntityListener() {
+	}
+
+	/**
+	 * Lifecycle callback invoked by JPA before an entity is inserted or updated.
+	 * <p>
+	 * Calls {@link SanitizationUtils#apply(Object)} on the given entity instance,
+	 * sanitizing any fields marked with {@link Sanitize @Sanitize}.
+	 *
+	 * @param entity
+	 *               the entity instance about to be persisted or updated; never
+	 *               {@code null}
+	 */
+	@PrePersist
+	@PreUpdate
+	public void onSave(final Object entity) {
+		SanitizationUtils.apply(entity);
+	}
 }

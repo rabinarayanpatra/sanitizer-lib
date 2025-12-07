@@ -2,6 +2,7 @@ plugins {
     java
     `maven-publish`
     id("io.spring.dependency-management") version "1.1.7"
+    id("com.diffplug.spotless") version "6.25.0"
 }
 
 group = "io.github.rabinarayanpatra.sanitizer"
@@ -86,5 +87,15 @@ subprojects {
     configure<SigningExtension> {
         useGpgCmd()
         sign(publishing.publications["maven"])
+    }
+
+    apply(plugin = "com.diffplug.spotless")
+    configure<com.diffplug.gradle.spotless.SpotlessExtension> {
+        java {
+            eclipse()
+            removeUnusedImports()
+            trimTrailingWhitespace()
+            endWithNewline()
+        }
     }
 }

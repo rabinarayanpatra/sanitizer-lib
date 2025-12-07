@@ -5,7 +5,8 @@ import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
 /**
  * Sanitizer that trims leading and trailing whitespace from the input string.
  * <p>
- * Commonly used to normalize user input such as names, emails, or free-text fields before storage or validation.
+ * Commonly used to normalize user input such as names, emails, or free-text
+ * fields before storage or validation.
  *
  * <pre>
  * {@code
@@ -19,19 +20,25 @@ import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
  */
 public class TrimSanitizer implements FieldSanitizer<String> {
 
-  /**
-   * Trims whitespace from both ends of the input string.
-   *
-   * @param input the string to sanitize
-   * @return the trimmed string, or {@code null} if input is {@code null}
-   */
-  @Override
-  public String sanitize( final String input ) {
-    if( input == null ) {
-      return null;
-    }
+	/**
+	 * Default constructor.
+	 */
+	public TrimSanitizer() {
+	}
 
-    return input.trim();
-  }
+	/**
+	 * Trims whitespace from both ends of the input string.
+	 *
+	 * @param input
+	 *              the string to sanitize
+	 * @return the trimmed string, or {@code null} if input is {@code null}
+	 */
+	@Override
+	public String sanitize(final String input) {
+		if (input == null) {
+			return null;
+		}
+
+		return input.trim();
+	}
 }
-

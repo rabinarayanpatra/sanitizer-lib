@@ -8,29 +8,29 @@ import java.lang.annotation.Target;
 import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
 
 /**
- * Apply one or more {@link FieldSanitizer} implementations to this field, in the order listed.
+ * Apply one or more {@link FieldSanitizer} implementations to this field, in
+ * the order listed.
  *
- * <p>Example:
+ * <p>
+ * Example:
+ *
  * <pre>{@code
  * public class Person {
- *   @Sanitize(using = {
- *     TrimSanitizer.class,
- *     CollapseWhitespaceSanitizer.class,
- *     LowerCaseSanitizer.class
- *   })
- *   private String fullName;
+ * 	@Sanitize(using = {TrimSanitizer.class, CollapseWhitespaceSanitizer.class, LowerCaseSanitizer.class})
+ * 	private String fullName;
  * }
  * }</pre>
  *
  * @since 1.0.0
  */
-@Retention( RetentionPolicy.RUNTIME )
-@Target( ElementType.FIELD )
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
 public @interface Sanitize {
-  /**
-   * The ordered list of FieldSanitizer implementations to apply.
-   *
-   * @return the sanitizer classes
-   */
-  @SuppressWarnings( "java:S1452" ) Class<? extends FieldSanitizer<?>>[] using();
+	/**
+	 * The ordered list of FieldSanitizer implementations to apply.
+	 *
+	 * @return the sanitizer classes
+	 */
+	@SuppressWarnings("java:S1452")
+	Class<? extends FieldSanitizer<?>>[] using();
 }

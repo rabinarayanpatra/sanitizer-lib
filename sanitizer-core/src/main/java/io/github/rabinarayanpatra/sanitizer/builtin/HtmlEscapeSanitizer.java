@@ -3,11 +3,13 @@ package io.github.rabinarayanpatra.sanitizer.builtin;
 import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
 
 /**
- * Sanitizer that escapes basic HTML special characters to prevent injection in rendered output.
+ * Sanitizer that escapes basic HTML special characters to prevent injection in
+ * rendered output.
  * <p>
- * This sanitizer replaces characters like {@code <}, {@code >}, {@code &}, {@code "}, and {@code '} with their
- * corresponding HTML entities. It is intended for simple HTML-escaping in contexts like log output or pre-escaped text
- * rendering.
+ * This sanitizer replaces characters like {@code <}, {@code >}, {@code &},
+ * {@code "}, and {@code '} with their corresponding HTML entities. It is
+ * intended for simple HTML-escaping in contexts like log output or pre-escaped
+ * text rendering.
  *
  * <pre>
  * {@code
@@ -22,18 +24,25 @@ import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
  */
 public class HtmlEscapeSanitizer implements FieldSanitizer<String> {
 
-  /**
-   * Escapes HTML special characters in the input string.
-   *
-   * @param in the string to sanitize
-   * @return the escaped string, or {@code null} if input is {@code null}
-   */
-  @Override
-  public String sanitize( final String in ) {
-    if( in == null ) {
-      return null;
-    }
-    return in.replace( "&", "&amp;" ).replace( "<", "&lt;" ).replace( ">", "&gt;" ).replace( "\"", "&quot;" )
-        .replace( "'", "&#x27;" );
-  }
+	/**
+	 * Default constructor.
+	 */
+	public HtmlEscapeSanitizer() {
+	}
+
+	/**
+	 * Escapes HTML special characters in the input string.
+	 *
+	 * @param in
+	 *           the string to sanitize
+	 * @return the escaped string, or {@code null} if input is {@code null}
+	 */
+	@Override
+	public String sanitize(final String in) {
+		if (in == null) {
+			return null;
+		}
+		return in.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;").replace("'",
+				"&#x27;");
+	}
 }

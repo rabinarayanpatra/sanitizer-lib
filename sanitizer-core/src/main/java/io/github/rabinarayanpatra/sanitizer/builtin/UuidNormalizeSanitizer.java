@@ -5,10 +5,12 @@ import java.util.UUID;
 import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
 
 /**
- * Sanitizer that normalizes a UUID string to lowercase and validates its format.
+ * Sanitizer that normalizes a UUID string to lowercase and validates its
+ * format.
  * <p>
- * If the input is wrapped in braces (e.g. {@code {uuid}}), they are removed. If the input is a valid UUID, it is
- * normalized to lowercase using {@link UUID#fromString(String)}; otherwise, the lowercased input is returned.
+ * If the input is wrapped in braces (e.g. {@code {uuid}}), they are removed. If
+ * the input is a valid UUID, it is normalized to lowercase using
+ * {@link UUID#fromString(String)}; otherwise, the lowercased input is returned.
  *
  * <pre>
  * {@code
@@ -23,29 +25,38 @@ import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
  */
 public class UuidNormalizeSanitizer implements FieldSanitizer<String> {
 
-  /**
-   * Normalizes a UUID string by removing braces, lowercasing, and validating format.
-   *
-   * @param in the input string to sanitize
-   * @return a valid lowercase UUID string, or the lowercased input if parsing fails; {@code null} if input is null
-   */
-  @Override
-  public String sanitize( final String in ) {
-    if( in == null ) {
-      return null;
-    }
+	/**
+	 * Default constructor.
+	 */
+	public UuidNormalizeSanitizer() {
+	}
 
-    String trimmed = in.trim();
+	/**
+	 * Normalizes a UUID string by removing braces, lowercasing, and validating
+	 * format.
+	 *
+	 * @param in
+	 *           the input string to sanitize
+	 * @return a valid lowercase UUID string, or the lowercased input if parsing
+	 *         fails; {@code null} if input is null
+	 */
+	@Override
+	public String sanitize(final String in) {
+		if (in == null) {
+			return null;
+		}
 
-    if( trimmed.startsWith( "{" ) && trimmed.endsWith( "}" ) ) {
-      trimmed = trimmed.substring( 1, trimmed.length() - 1 );
-    }
+		String trimmed = in.trim();
 
-    try {
-      final UUID uuid = UUID.fromString( trimmed );
-      return uuid.toString();
-    } catch( final IllegalArgumentException e ) {
-      return trimmed.toLowerCase();
-    }
-  }
+		if (trimmed.startsWith("{") && trimmed.endsWith("}")) {
+			trimmed = trimmed.substring(1, trimmed.length() - 1);
+		}
+
+		try {
+			final UUID uuid = UUID.fromString(trimmed);
+			return uuid.toString();
+		} catch (final IllegalArgumentException e) {
+			return trimmed.toLowerCase();
+		}
+	}
 }

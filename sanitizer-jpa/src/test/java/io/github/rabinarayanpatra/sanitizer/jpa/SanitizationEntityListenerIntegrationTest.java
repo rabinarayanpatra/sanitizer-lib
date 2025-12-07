@@ -18,63 +18,65 @@ import jakarta.persistence.Id;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest( classes = TestConfig.class )
+@SpringBootTest(classes = TestConfig.class)
 class SanitizationEntityListenerIntegrationTest {
 
-  @Autowired
-  PaymentRepository repository;
+	@Autowired
+	PaymentRepository repository;
 
-  @Test
-  void entityIsSanitizedBeforePersist() {
-    final PaymentEntity p = new PaymentEntity();
-    p.setCardNumber( "1234-5678-9012-3456" );
-    final PaymentEntity saved = repository.save( p );
+	@Test
+	void entityIsSanitizedBeforePersist() {
+		final PaymentEntity p = new PaymentEntity();
+		p.setCardNumber("1234-5678-9012-3456");
+		final PaymentEntity saved = repository.save(p);
 
-    // Should be masked to "**** **** **** 3456"
-    assertThat( saved.getCardNumber() ).endsWith( "3456" );
-    assertThat( saved.getCardNumber() ).startsWith( "****" );
-  }
+		// Should be masked to "**** **** **** 3456"
+		assertThat(saved.getCardNumber()).endsWith("3456");
+		assertThat(saved.getCardNumber()).startsWith("****");
+	}
 
-  interface PaymentRepository extends JpaRepository<PaymentEntity, Long> {
-  }
+	interface PaymentRepository extends JpaRepository<PaymentEntity, Long> {
+	}
 
-  @SpringBootApplication( scanBasePackageClasses = SanitizationEntityListenerIntegrationTest.class )
-  @EnableJpaRepositories( basePackageClasses = SanitizationEntityListenerIntegrationTest.class,
-      considerNestedRepositories = true          // ← enable nested scanning
-  )
-  @EntityScan( basePackageClasses = SanitizationEntityListenerIntegrationTest.class )
-  static class TestConfig {
-    // Nothing else needed: this will
-    // 1) Auto-configure H2 + Spring Data JPA,
-    // 2) Scan nested @Entity and nested JpaRepository,
-    // 3) Pick up your SanitizationEntityListener bean.
-  }
+	@SpringBootApplication(scanBasePackageClasses = SanitizationEntityListenerIntegrationTest.class)
+	@EnableJpaRepositories(basePackageClasses = SanitizationEntityListenerIntegrationTest.class, considerNestedRepositories = true // ←
+																																	// enable
+																																	// nested
+																																	// scanning
+	)
+	@EntityScan(basePackageClasses = SanitizationEntityListenerIntegrationTest.class)
+	static class TestConfig {
+		// Nothing else needed: this will
+		// 1) Auto-configure H2 + Spring Data JPA,
+		// 2) Scan nested @Entity and nested JpaRepository,
+		// 3) Pick up your SanitizationEntityListener bean.
+	}
 
-  @Entity( name = "payment" )
-  @EntityListeners( SanitizationEntityListener.class )
-  static class PaymentEntity {
-    @Id
-    @GeneratedValue
-    Long id;
+	@Entity(name = "payment")
+	@EntityListeners(SanitizationEntityListener.class)
+	static class PaymentEntity {
+		@Id
+		@GeneratedValue
+		Long id;
 
-    @Sanitize( using = CreditCardMaskSanitizer.class )
-    private String cardNumber;
+		@Sanitize(using = CreditCardMaskSanitizer.class)
+		private String cardNumber;
 
-    // getters/setters…
-    public Long getId() {
-      return id;
-    }
+		// getters/setters…
+		public Long getId() {
+			return id;
+		}
 
-    public void setId( final Long id ) {
-      this.id = id;
-    }
+		public void setId(final Long id) {
+			this.id = id;
+		}
 
-    public String getCardNumber() {
-      return cardNumber;
-    }
+		public String getCardNumber() {
+			return cardNumber;
+		}
 
-    public void setCardNumber( final String cn ) {
-      this.cardNumber = cn;
-    }
-  }
+		public void setCardNumber(final String cn) {
+			this.cardNumber = cn;
+		}
+	}
 }

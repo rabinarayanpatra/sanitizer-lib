@@ -17,6 +17,7 @@ subprojects {
     apply(plugin = "java-library")
     apply(plugin = "io.spring.dependency-management")
     apply(plugin = "maven-publish")
+    apply(plugin = "signing")
 
     java {
         toolchain {
@@ -44,17 +45,46 @@ subprojects {
         publications {
             create<MavenPublication>("maven") {
                 from(components["java"])
+                
+                pom {
+                    name.set(project.name)
+                    description.set("Sanitizer Library")
+                    url.set("https://github.com/rabinarayanpatra/sanitizer-lib")
+                    licenses {
+                        license {
+                            name.set("MIT License")
+                            url.set("https://opensource.org/licenses/MIT")
+                        }
+                    }
+                    developers {
+                        developer {
+                            id.set("rabinarayanpatra")
+                            name.set("Rabinarayan Patra")
+                            email.set("rabinarayanpatra1999@gmail.com")
+                        }
+                    }
+                    scm {
+                        connection.set("scm:git:git://github.com/rabinarayanpatra/sanitizer-lib.git")
+                        developerConnection.set("scm:git:ssh://github.com/rabinarayanpatra/sanitizer-lib.git")
+                        url.set("https://github.com/rabinarayanpatra/sanitizer-lib")
+                    }
+                }
             }
         }
         repositories {
             maven {
-                name = "GitHubPackages"
-                url = uri("https://maven.pkg.github.com/rabinarayanpatra/sanitizer-lib")
+                name = "OSSRH"
+                url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
                 credentials {
-                    username = System.getenv("GITHUB_ACTOR") ?: project.findProperty("gpr.user") as String?
-                    password = System.getenv("GITHUB_TOKEN") ?: project.findProperty("gpr.key") as String?
+                    username = System.getenv("OSSRH_USERNAME") ?: project.findProperty("ossrhUsername") as String?
+                    password = System.getenv("OSSRH_PASSWORD") ?: project.findProperty("ossrhPassword") as String?
                 }
             }
         }
+    }
+
+    configure<SigningExtension> {
+        useGpgCmd()
+        sign(publishing.publications["maven"])
     }
 }

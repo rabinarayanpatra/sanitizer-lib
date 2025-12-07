@@ -1,6 +1,6 @@
 # Sanitizer-Lib
 
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.rabinarayanpatra.sanitizer/sanitizer-core.svg)](https://central.sonatype.com/artifact/io.github.rabinarayanpatra.sanitizer/sanitizer-core)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.rabinarayanpatra.sanitizer/sanitizer-core.svg)](https://central.sonatype.com/namespace/io.github.rabinarayanpatra.sanitizer)
 
 ## Overview
 

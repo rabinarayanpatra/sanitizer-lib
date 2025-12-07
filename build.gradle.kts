@@ -1,7 +1,7 @@
 plugins {
     java
     `maven-publish`
-    id("io.spring.dependency-management") version "1.1.4"
+    id("io.spring.dependency-management") version "1.1.7"
 }
 
 group = "io.github.rabinarayanpatra.sanitizer"
@@ -34,6 +34,10 @@ subprojects {
 
     tasks.withType<Test> {
         useJUnitPlatform()
+    }
+
+    dependencies {
+        testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     }
     
     publishing {

@@ -5,10 +5,10 @@ plugins {
     id("com.diffplug.spotless") version "6.25.0"
 }
 
-group = "io.github.rabinarayanpatra.sanitizer"
-version = "1.0.21"
-
 allprojects {
+    group = "io.github.rabinarayanpatra.sanitizer"
+    version = "1.0.21"
+
     repositories {
         mavenCentral()
     }

@@ -57,8 +57,13 @@ The library follows a modular design with clear separation of concerns:
 <dependency>
     <groupId>io.github.rabinarayanpatra.sanitizer</groupId>
     <artifactId>sanitizer-spring</artifactId>
-    <version>1.0.15</version>
+    <version>1.0.21</version>
 </dependency>
+```
+
+**Gradle (Kotlin DSL):**
+```kotlin
+implementation("io.github.rabinarayanpatra.sanitizer:sanitizer-spring:1.0.21")
 ```
 
 #### JPA Integration (Optional)
@@ -67,8 +72,13 @@ The library follows a modular design with clear separation of concerns:
 <dependency>
     <groupId>io.github.rabinarayanpatra.sanitizer</groupId>
     <artifactId>sanitizer-jpa</artifactId>
-    <version>1.0.15</version>
+    <version>1.0.21</version>
 </dependency>
+```
+
+**Gradle (Kotlin DSL):**
+```kotlin
+implementation("io.github.rabinarayanpatra.sanitizer:sanitizer-jpa:1.0.21")
 ```
 
 ## Implementation Examples
@@ -172,7 +182,7 @@ Each module maintains its own dependency set while inheriting common configurati
 
 - **Version Strategy**: Adheres to [Semantic Versioning](https://semver.org/) principles
 - **Artifact Publishing**: Automated deployment to Maven Central via GitHub Actions
-- **CI/CD Pipeline**: See `.github/workflows/maven-publish.yml` for implementation details
+- **CI/CD Pipeline**: See `.github/workflows/release.yml` for implementation details
 
 ## Contribution Guidelines
 

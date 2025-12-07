@@ -33,7 +33,7 @@ public class PhoneE164Sanitizer implements FieldSanitizer<String> {
 	 * prefixing with {@code +}.
 	 *
 	 * @param in
-	 *           the input phone number
+	 *            the input phone number
 	 * @return the normalized E.164 phone number, or {@code null} if the result is
 	 *         empty or input is {@code null}
 	 */

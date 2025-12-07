@@ -32,7 +32,7 @@ public class NullIfBlankSanitizer implements FieldSanitizer<String> {
 	 * Trims the input and returns {@code null} if it is blank.
 	 *
 	 * @param in
-	 *           the string to sanitize
+	 *            the string to sanitize
 	 * @return {@code null} if input is blank or {@code null}; otherwise, the
 	 *         original string
 	 */

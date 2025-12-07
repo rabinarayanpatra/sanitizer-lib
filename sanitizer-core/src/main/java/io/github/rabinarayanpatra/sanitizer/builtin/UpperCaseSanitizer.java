@@ -31,7 +31,7 @@ public class UpperCaseSanitizer implements FieldSanitizer<String> {
 	 * Converts the input string to uppercase.
 	 *
 	 * @param in
-	 *           the string to sanitize
+	 *            the string to sanitize
 	 * @return the uppercase version of the input, or {@code null} if input is
 	 *         {@code null}
 	 */

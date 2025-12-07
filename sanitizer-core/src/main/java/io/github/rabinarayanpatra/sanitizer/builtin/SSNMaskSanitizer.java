@@ -32,7 +32,7 @@ public class SSNMaskSanitizer implements FieldSanitizer<String> {
 	 * preserving only the last four digits.
 	 *
 	 * @param in
-	 *           the input SSN string
+	 *            the input SSN string
 	 * @return the masked SSN, or the original input if the cleaned string is not 9
 	 *         digits; {@code null} if input is null
 	 */

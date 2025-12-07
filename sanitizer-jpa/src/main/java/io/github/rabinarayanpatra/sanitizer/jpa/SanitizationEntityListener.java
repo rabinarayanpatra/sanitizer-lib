@@ -47,8 +47,8 @@ public class SanitizationEntityListener {
 	 * sanitizing any fields marked with {@link Sanitize @Sanitize}.
 	 *
 	 * @param entity
-	 *               the entity instance about to be persisted or updated; never
-	 *               {@code null}
+	 *            the entity instance about to be persisted or updated; never
+	 *            {@code null}
 	 */
 	@PrePersist
 	@PreUpdate

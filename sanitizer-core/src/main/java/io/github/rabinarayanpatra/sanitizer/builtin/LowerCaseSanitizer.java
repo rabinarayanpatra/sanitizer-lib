@@ -30,7 +30,7 @@ public class LowerCaseSanitizer implements FieldSanitizer<String> {
 	 * Converts the input string to lowercase.
 	 *
 	 * @param input
-	 *              the string to sanitize
+	 *            the string to sanitize
 	 * @return the lowercase string, or {@code null} if input is {@code null}
 	 */
 	@Override

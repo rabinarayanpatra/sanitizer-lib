@@ -32,7 +32,7 @@ public class TitleCaseSanitizer implements FieldSanitizer<String> {
 	 * lowercases the rest).
 	 *
 	 * @param input
-	 *              the string to sanitize
+	 *            the string to sanitize
 	 * @return the title-cased string, or the original input if it is {@code null}
 	 *         or blank
 	 */

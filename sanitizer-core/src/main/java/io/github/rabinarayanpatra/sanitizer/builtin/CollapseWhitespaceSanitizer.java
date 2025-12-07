@@ -31,7 +31,7 @@ public class CollapseWhitespaceSanitizer implements FieldSanitizer<String> {
 	 * Trims the input and replaces all runs of whitespace with a single space.
 	 *
 	 * @param in
-	 *           the input string to sanitize
+	 *            the input string to sanitize
 	 * @return the sanitized string, or {@code null} if the input was {@code null}
 	 */
 	@Override

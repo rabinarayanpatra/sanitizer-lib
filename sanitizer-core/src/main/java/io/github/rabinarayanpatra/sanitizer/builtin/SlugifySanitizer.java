@@ -36,7 +36,7 @@ public class SlugifySanitizer implements FieldSanitizer<String> {
 	 * replacing non-alphanumerics with dashes.
 	 *
 	 * @param in
-	 *           the input string to slugify
+	 *            the input string to slugify
 	 * @return the slugified string, or {@code null} if input is {@code null}
 	 */
 	@Override

@@ -32,7 +32,7 @@ public class CreditCardMaskSanitizer implements FieldSanitizer<String> {
 	 * Masks all but the last four digits of a credit card number.
 	 *
 	 * @param input
-	 *              the credit card number as a string
+	 *            the credit card number as a string
 	 * @return the masked credit card string, or {@code "****"} if fewer than four
 	 *         digits remain; returns {@code null} if the input is {@code null}
 	 */

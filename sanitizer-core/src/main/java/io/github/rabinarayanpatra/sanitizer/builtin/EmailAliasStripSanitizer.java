@@ -33,7 +33,7 @@ public class EmailAliasStripSanitizer implements FieldSanitizer<String> {
 	 * part.
 	 *
 	 * @param in
-	 *           the input email address
+	 *            the input email address
 	 * @return the normalized email address, or {@code null} if input is
 	 *         {@code null}
 	 */

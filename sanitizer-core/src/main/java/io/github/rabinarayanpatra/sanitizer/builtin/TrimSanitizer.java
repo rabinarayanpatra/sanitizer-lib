@@ -30,7 +30,7 @@ public class TrimSanitizer implements FieldSanitizer<String> {
 	 * Trims whitespace from both ends of the input string.
 	 *
 	 * @param input
-	 *              the string to sanitize
+	 *            the string to sanitize
 	 * @return the trimmed string, or {@code null} if input is {@code null}
 	 */
 	@Override

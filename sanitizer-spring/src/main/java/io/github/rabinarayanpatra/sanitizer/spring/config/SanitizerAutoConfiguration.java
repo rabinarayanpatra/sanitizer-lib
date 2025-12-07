@@ -193,7 +193,7 @@ public class SanitizerAutoConfiguration {
 	 * Builds a registry that holds all discovered sanitizer beans.
 	 *
 	 * @param sanitizers
-	 *                   list of all registered {@link FieldSanitizer} beans
+	 *            list of all registered {@link FieldSanitizer} beans
 	 * @return a new {@link SanitizerRegistry}
 	 */
 	@Bean

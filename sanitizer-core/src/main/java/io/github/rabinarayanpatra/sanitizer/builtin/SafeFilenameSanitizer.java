@@ -32,7 +32,7 @@ public class SafeFilenameSanitizer implements FieldSanitizer<String> {
 	 * Replaces filesystem-reserved characters with underscores in the input string.
 	 *
 	 * @param in
-	 *           the proposed filename string
+	 *            the proposed filename string
 	 * @return a sanitized filename-safe string, or {@code null} if input is
 	 *         {@code null}
 	 */

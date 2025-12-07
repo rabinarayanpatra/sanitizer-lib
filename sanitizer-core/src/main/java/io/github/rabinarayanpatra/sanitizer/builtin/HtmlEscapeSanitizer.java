@@ -34,7 +34,7 @@ public class HtmlEscapeSanitizer implements FieldSanitizer<String> {
 	 * Escapes HTML special characters in the input string.
 	 *
 	 * @param in
-	 *           the string to sanitize
+	 *            the string to sanitize
 	 * @return the escaped string, or {@code null} if input is {@code null}
 	 */
 	@Override

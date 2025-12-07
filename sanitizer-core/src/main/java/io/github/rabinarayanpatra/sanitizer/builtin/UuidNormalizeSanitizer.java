@@ -36,7 +36,7 @@ public class UuidNormalizeSanitizer implements FieldSanitizer<String> {
 	 * format.
 	 *
 	 * @param in
-	 *           the input string to sanitize
+	 *            the input string to sanitize
 	 * @return a valid lowercase UUID string, or the lowercased input if parsing
 	 *         fails; {@code null} if input is null
 	 */

@@ -34,7 +34,7 @@ public class IBANMaskSanitizer implements FieldSanitizer<String> {
 	 * processing.
 	 *
 	 * @param in
-	 *           the IBAN string to sanitize
+	 *            the IBAN string to sanitize
 	 * @return the masked IBAN, or the original input if it has four or fewer
 	 *         characters; {@code null} if input is null
 	 */

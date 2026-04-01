@@ -19,6 +19,7 @@ subprojects {
     apply(plugin = "java-library")
     apply(plugin = "io.spring.dependency-management")
     apply(plugin = "com.vanniktech.maven.publish")
+    apply(plugin = "jacoco")
 
     java {
         toolchain {
@@ -34,6 +35,14 @@ subprojects {
 
     tasks.withType<Test> {
         useJUnitPlatform()
+        finalizedBy(tasks.named("jacocoTestReport"))
+    }
+
+    tasks.withType<JacocoReport> {
+        reports {
+            xml.required.set(true)
+            html.required.set(true)
+        }
     }
 
     dependencies {

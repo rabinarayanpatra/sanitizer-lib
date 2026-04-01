@@ -19,7 +19,7 @@ Sanitizer-Lib is an enterprise-grade input sanitization framework for Java appli
 |-----------|---------|
 | `TrimSanitizer` | Eliminates leading and trailing whitespace |
 | `LowerCaseSanitizer` | Normalizes text to lowercase |
-| `TitleCaseSanitizer` | Capitalizes the first character of text |
+| `TitleCaseSanitizer` | Capitalizes the first character of each word |
 | `CreditCardMaskSanitizer` | Secures card numbers by displaying only the last four digits |
 
 ### Framework Integration
@@ -46,7 +46,7 @@ The library follows a modular design with clear separation of concerns:
 ## Technical Requirements
 
 - Java 21 (LTS)
-- Maven 3.8+
+- Gradle 8.x+
 - Spring Boot 3.4.x (for Spring integration)
 
 ## Implementation Guide
@@ -59,13 +59,13 @@ The library follows a modular design with clear separation of concerns:
 <dependency>
     <groupId>io.github.rabinarayanpatra.sanitizer</groupId>
     <artifactId>sanitizer-spring</artifactId>
-    <version>1.0.21</version>
+    <version>1.0.23</version>
 </dependency>
 ```
 
 **Gradle (Kotlin DSL):**
 ```kotlin
-implementation("io.github.rabinarayanpatra.sanitizer:sanitizer-spring:1.0.21")
+implementation("io.github.rabinarayanpatra.sanitizer:sanitizer-spring:1.0.23")
 ```
 
 #### JPA Integration (Optional)
@@ -74,13 +74,13 @@ implementation("io.github.rabinarayanpatra.sanitizer:sanitizer-spring:1.0.21")
 <dependency>
     <groupId>io.github.rabinarayanpatra.sanitizer</groupId>
     <artifactId>sanitizer-jpa</artifactId>
-    <version>1.0.21</version>
+    <version>1.0.23</version>
 </dependency>
 ```
 
 **Gradle (Kotlin DSL):**
 ```kotlin
-implementation("io.github.rabinarayanpatra.sanitizer:sanitizer-jpa:1.0.21")
+implementation("io.github.rabinarayanpatra.sanitizer:sanitizer-jpa:1.0.23")
 ```
 
 ## Implementation Examples
@@ -178,7 +178,7 @@ sanitizer-lib/             ← Parent project (packaging=pom)
 └── sanitizer-jpa/         ← JPA persistence integration
 ```
 
-Each module maintains its own dependency set while inheriting common configuration from the parent POM.
+Each module maintains its own dependency set while inheriting common configuration from the parent build script.
 
 ## Release Management
 

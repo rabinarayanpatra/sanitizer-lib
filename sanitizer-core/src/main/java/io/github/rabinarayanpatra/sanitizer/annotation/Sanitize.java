@@ -10,7 +10,9 @@ import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
 
 /**
  * Apply one or more {@link FieldSanitizer} implementations to this field, in
- * the order listed.
+ * the order listed. Sanitizers are applied in array order, so
+ * {@code @Sanitize(using = {TrimSanitizer.class, LowerCaseSanitizer.class})}
+ * guarantees trim-then-lowercase.
  *
  * <p>
  * This annotation is {@link Repeatable}, so multiple {@code @Sanitize}

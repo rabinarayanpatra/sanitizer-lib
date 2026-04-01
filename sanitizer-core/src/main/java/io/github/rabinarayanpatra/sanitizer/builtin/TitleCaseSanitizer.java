@@ -3,8 +3,8 @@ package io.github.rabinarayanpatra.sanitizer.builtin;
 import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
 
 /**
- * Sanitizer that converts the input string to a title case by capitalizing the
- * first character and lowercasing the rest.
+ * Sanitizer that converts the input string to title case by capitalizing the
+ * first character of each word and lowercasing the rest.
  * <p>
  * Leading and trailing whitespace is trimmed first. If the input is
  * {@code null} or blank, it is returned as-is.
@@ -12,7 +12,7 @@ import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
  * <pre>
  * {@code
  * String input = "  heLLo WoRLd ";
- * String sanitized = new TitleCaseSanitizer().sanitize(input); // "Hello world"
+ * String sanitized = new TitleCaseSanitizer().sanitize(input); // "Hello World"
  * }
  * </pre>
  *
@@ -28,8 +28,8 @@ public class TitleCaseSanitizer implements FieldSanitizer<String> {
 	}
 
 	/**
-	 * Converts a trimmed string to a title case (capitalizes first letter,
-	 * lowercases the rest).
+	 * Converts a trimmed string to title case (capitalizes the first letter of each
+	 * word, lowercases the rest).
 	 *
 	 * @param input
 	 *            the string to sanitize
@@ -42,7 +42,23 @@ public class TitleCaseSanitizer implements FieldSanitizer<String> {
 			return input;
 		}
 
-		final String trimmed = input.trim().toLowerCase();
-		return Character.toUpperCase(trimmed.charAt(0)) + trimmed.substring(1);
+		final String trimmed = input.trim();
+		final StringBuilder sb = new StringBuilder(trimmed.length());
+		boolean capitalizeNext = true;
+
+		for (int i = 0; i < trimmed.length(); i++) {
+			final char c = trimmed.charAt(i);
+			if (Character.isWhitespace(c)) {
+				sb.append(c);
+				capitalizeNext = true;
+			} else if (capitalizeNext) {
+				sb.append(Character.toUpperCase(c));
+				capitalizeNext = false;
+			} else {
+				sb.append(Character.toLowerCase(c));
+			}
+		}
+
+		return sb.toString();
 	}
 }

@@ -16,6 +16,8 @@ package io.github.rabinarayanpatra.sanitizer.core;
  */
 public class SanitizerInstantiationException extends RuntimeException {
 
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructs a new {@code SanitizerInstantiationException} with the specified
 	 * detail message and cause.

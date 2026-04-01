@@ -3,13 +3,18 @@ package io.github.rabinarayanpatra.sanitizer.builtin;
 import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
 
 /**
- * Sanitizer that escapes basic HTML special characters to prevent injection in
- * rendered output.
+ * Sanitizer that escapes basic HTML special characters in rendered output.
  * <p>
  * This sanitizer replaces characters like {@code <}, {@code >}, {@code &},
  * {@code "}, and {@code '} with their corresponding HTML entities. It is
  * intended for simple HTML-escaping in contexts like log output or pre-escaped
  * text rendering.
+ * <p>
+ * <strong>Security note:</strong> This sanitizer performs basic character
+ * escaping only. It does not handle Unicode escapes, null bytes, or
+ * double-encoding attacks. It is a formatting utility, not a security control.
+ * For XSS prevention, use a dedicated library such as OWASP Java HTML
+ * Sanitizer.
  *
  * <pre>
  * {@code

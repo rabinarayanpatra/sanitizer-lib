@@ -47,4 +47,18 @@ public @interface Sanitize {
 	 */
 	@SuppressWarnings("java:S1452")
 	Class<? extends FieldSanitizer<?>>[] using();
+
+	/**
+	 * Optional comma-separated {@code key=value} configuration parameters passed to
+	 * {@link io.github.rabinarayanpatra.sanitizer.core.ConfigurableFieldSanitizer}
+	 * implementations. Ignored for non-configurable sanitizers.
+	 *
+	 * <p>
+	 * Example: {@code params = "maxLength=100,suffix=..."} or
+	 * {@code params = "reveal=4"}
+	 *
+	 * @return the parameter string, empty by default
+	 * @since 1.1.0
+	 */
+	String params() default "";
 }

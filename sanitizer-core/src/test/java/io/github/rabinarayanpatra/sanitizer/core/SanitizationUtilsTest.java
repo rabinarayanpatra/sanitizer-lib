@@ -37,12 +37,12 @@ class SanitizationUtilsTest {
 	}
 
 	@Test
-	void apply_throwsOnInaccessibleField() {
+	void apply_throwsOnRecord() {
 		final ImmutableRecord rec = new ImmutableRecord("  HELLO  ");
-		final IllegalStateException ex = assertThrows(IllegalStateException.class, () -> SanitizationUtils.apply(rec));
-		assertTrue(ex.getMessage().contains("name"));
+		final UnsupportedOperationException ex = assertThrows(UnsupportedOperationException.class,
+				() -> SanitizationUtils.apply(rec));
 		assertTrue(ex.getMessage().contains("ImmutableRecord"));
-		assertTrue(ex.getCause() instanceof IllegalAccessException);
+		assertTrue(ex.getMessage().contains("records"));
 	}
 
 	// --- P0: @Repeatable support ---

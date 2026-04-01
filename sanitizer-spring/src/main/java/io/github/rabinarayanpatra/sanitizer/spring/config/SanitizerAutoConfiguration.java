@@ -130,6 +130,21 @@ public class SanitizerAutoConfiguration {
 	 *
 	 * @return a {@link SlugifySanitizer} bean
 	 */
+	/**
+	 * Creates a {@link SentenceCaseSanitizer} bean.
+	 *
+	 * @return a {@link SentenceCaseSanitizer} bean
+	 */
+	@Bean
+	public FieldSanitizer<String> sentenceCaseSanitizer() {
+		return new SentenceCaseSanitizer();
+	}
+
+	/**
+	 * Creates a {@link SlugifySanitizer} bean.
+	 *
+	 * @return a {@link SlugifySanitizer} bean
+	 */
 	@Bean
 	public FieldSanitizer<String> slugifySanitizer() {
 		return new SlugifySanitizer();
@@ -183,6 +198,31 @@ public class SanitizerAutoConfiguration {
 	@Bean
 	public FieldSanitizer<String> uuidNormalizeSanitizer() {
 		return new UuidNormalizeSanitizer();
+	}
+
+	/**
+	 * Creates a {@link TruncateSanitizer} bean.
+	 *
+	 * @return a {@link TruncateSanitizer} bean
+	 */
+	/**
+	 * Creates a {@link RemoveNonPrintableSanitizer} bean.
+	 *
+	 * @return a {@link RemoveNonPrintableSanitizer} bean
+	 */
+	@Bean
+	public FieldSanitizer<String> removeNonPrintableSanitizer() {
+		return new RemoveNonPrintableSanitizer();
+	}
+
+	/**
+	 * Creates a {@link TruncateSanitizer} bean.
+	 *
+	 * @return a {@link TruncateSanitizer} bean
+	 */
+	@Bean
+	public FieldSanitizer<String> truncateSanitizer() {
+		return new TruncateSanitizer();
 	}
 
 	// ————————————————————————————————————————

@@ -72,6 +72,12 @@ public final class SanitizationUtils {
 	 * {@code @MappedSuperclass} and other inheritance patterns.
 	 */
 	private static List<Holder> inspect(final Class<?> cls) {
+		if (cls.isRecord()) {
+			throw new UnsupportedOperationException("@Sanitize is not supported on Java records (" + cls.getName()
+					+ "). Records have final fields that cannot be modified via reflection. "
+					+ "Use a mutable DTO or POJO instead, and copy values into the record after sanitization.");
+		}
+
 		final List<Holder> list = new ArrayList<>();
 
 		Class<?> current = cls;
@@ -89,6 +95,10 @@ public final class SanitizationUtils {
 							@SuppressWarnings("unchecked")
 							final FieldSanitizer<Object> sanitizer = (FieldSanitizer<Object>) sanitizerClass
 									.getDeclaredConstructor().newInstance();
+							if (sanitizer instanceof ConfigurableFieldSanitizer<?> configurable
+									&& !ann.params().isBlank()) {
+								configurable.configure(ConfigurableFieldSanitizer.parseParams(ann.params()));
+							}
 							list.add(new Holder(field, sanitizer));
 						} catch (final ReflectiveOperationException e) {
 							throw new SanitizerInstantiationException(

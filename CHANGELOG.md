@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.1.0] - 2026-04-01
+
+### Added
+- **Configurable sanitizers** — `ConfigurableFieldSanitizer<T>` base class with `params` attribute on `@Sanitize` for key-value configuration
+- `TruncateSanitizer` — configurable string truncation with optional suffix (`maxLength`, `suffix` params)
+- `RemoveNonPrintableSanitizer` bean registered in Spring autoconfiguration (was missing)
+- Java records detection — throws `UnsupportedOperationException` with clear guidance instead of silent failure
+- GitHub Actions workflow for publishing Javadoc to GitHub Pages on release
+- Dependabot configuration for automated Gradle and GitHub Actions dependency updates
+- README now lists all 17 built-in sanitizers with descriptions
+- README section documenting configurable sanitizer usage
+
+### Changed
+- Version bumped from 1.0.23 to 1.1.0 (minor release — new features, backward-compatible)
+
 ## [1.0.23] - 2026-04-01
 
 ### Fixed

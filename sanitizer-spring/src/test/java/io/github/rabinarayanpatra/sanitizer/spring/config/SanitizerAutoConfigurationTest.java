@@ -38,7 +38,7 @@ class SanitizerAutoConfigurationTest {
 				"titleCaseSanitizer", "creditCardMaskSanitizer", "ssnMaskSanitizer", "ibanMaskSanitizer",
 				"htmlEscapeSanitizer", "slugifySanitizer", "phoneE164Sanitizer", "safeFilenameSanitizer",
 				"collapseWhitespaceSanitizer", "nullIfBlankSanitizer", "emailAliasStripSanitizer",
-				"uuidNormalizeSanitizer"};
+				"uuidNormalizeSanitizer", "removeNonPrintableSanitizer", "truncateSanitizer", "sentenceCaseSanitizer"};
 
 		for (final String beanName : expectedBeans) {
 			assertTrue(context.containsBean(beanName), "Missing bean: " + beanName);

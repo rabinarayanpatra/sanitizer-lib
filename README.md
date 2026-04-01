@@ -19,8 +19,21 @@ Sanitizer-Lib is an enterprise-grade input sanitization framework for Java appli
 |-----------|---------|
 | `TrimSanitizer` | Eliminates leading and trailing whitespace |
 | `LowerCaseSanitizer` | Normalizes text to lowercase |
+| `UpperCaseSanitizer` | Normalizes text to uppercase |
 | `TitleCaseSanitizer` | Capitalizes the first character of each word |
+| `CollapseWhitespaceSanitizer` | Trims and collapses internal whitespace to a single space |
 | `CreditCardMaskSanitizer` | Secures card numbers by displaying only the last four digits |
+| `SSNMaskSanitizer` | Masks U.S. SSN, revealing only the last four digits |
+| `IBANMaskSanitizer` | Masks IBAN except the last four characters |
+| `EmailAliasStripSanitizer` | Removes `+alias` from email addresses and lowercases |
+| `HtmlEscapeSanitizer` | Escapes HTML special characters |
+| `SlugifySanitizer` | Converts text to a URL-friendly slug |
+| `SafeFilenameSanitizer` | Replaces filesystem-reserved characters with underscores |
+| `PhoneE164Sanitizer` | Normalizes phone numbers to E.164 format |
+| `UuidNormalizeSanitizer` | Lowercases and validates UUID strings |
+| `NullIfBlankSanitizer` | Returns null if the string is blank |
+| `RemoveNonPrintableSanitizer` | Filters out non-printable control characters |
+| `TruncateSanitizer` | Configurable truncation with optional suffix (new in 1.1.0) |
 
 ### Framework Integration
 
@@ -59,13 +72,13 @@ The library follows a modular design with clear separation of concerns:
 <dependency>
     <groupId>io.github.rabinarayanpatra.sanitizer</groupId>
     <artifactId>sanitizer-spring</artifactId>
-    <version>1.0.23</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
 **Gradle (Kotlin DSL):**
 ```kotlin
-implementation("io.github.rabinarayanpatra.sanitizer:sanitizer-spring:1.0.23")
+implementation("io.github.rabinarayanpatra.sanitizer:sanitizer-spring:1.1.0")
 ```
 
 #### JPA Integration (Optional)
@@ -74,13 +87,13 @@ implementation("io.github.rabinarayanpatra.sanitizer:sanitizer-spring:1.0.23")
 <dependency>
     <groupId>io.github.rabinarayanpatra.sanitizer</groupId>
     <artifactId>sanitizer-jpa</artifactId>
-    <version>1.0.23</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
 **Gradle (Kotlin DSL):**
 ```kotlin
-implementation("io.github.rabinarayanpatra.sanitizer:sanitizer-jpa:1.0.23")
+implementation("io.github.rabinarayanpatra.sanitizer:sanitizer-jpa:1.1.0")
 ```
 
 ## Implementation Examples
@@ -129,6 +142,32 @@ public class Payment {
 ```
 
 When the entity is persisted or updated, the framework automatically masks the credit card number, enhancing security compliance.
+
+## Configurable Sanitizers (1.1.0+)
+
+Sanitizers can accept parameters via the `params` attribute. Extend `ConfigurableFieldSanitizer` to create parameterized sanitizers:
+
+```java
+@Sanitize(using = TruncateSanitizer.class, params = "maxLength=100,suffix=...")
+private String description;
+```
+
+Create your own configurable sanitizer:
+
+```java
+public class MaskSanitizer extends ConfigurableFieldSanitizer<String> {
+    @Override
+    public String sanitize(final String input) {
+        if (input == null) return null;
+        int reveal = getIntParam("reveal", 4);
+        String ch = getParam("character", "*");
+        if (input.length() <= reveal) return input;
+        return ch.repeat(input.length() - reveal) + input.substring(input.length() - reveal);
+    }
+}
+```
+
+Usage: `@Sanitize(using = MaskSanitizer.class, params = "reveal=6,character=X")`
 
 ## Extending the Framework
 

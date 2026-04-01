@@ -28,7 +28,6 @@ public final class SanitizationUtils {
 	 * @param bean
 	 *            the object whose fields should be sanitized
 	 */
-	@SuppressWarnings("java:S108")
 	public static void apply(final Object bean) {
 		if (bean == null) {
 			return;
@@ -43,7 +42,12 @@ public final class SanitizationUtils {
 				final Object raw = f.get(bean);
 				final Object clean = h.sanitizer.sanitize(raw);
 				f.set(bean, clean);
-			} catch (final IllegalAccessException ignored) {
+			} catch (final IllegalAccessException e) {
+				throw new IllegalStateException(
+						"Cannot access field '" + h.field.getName() + "' on " + bean.getClass().getName()
+								+ ". This may occur with Java records, JPMS strongly-encapsulated fields, "
+								+ "or final fields. Ensure the field is mutable and accessible.",
+						e);
 			}
 		}
 	}

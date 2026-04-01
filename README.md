@@ -1,6 +1,7 @@
 # Sanitizer-Lib
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.rabinarayanpatra.sanitizer/sanitizer-core.svg)](https://central.sonatype.com/namespace/io.github.rabinarayanpatra.sanitizer)
+[![Javadoc](https://img.shields.io/badge/javadoc-online-blue.svg)](https://rabinarayanpatra.github.io/sanitizer-lib/)
 
 ## Overview
 
@@ -219,10 +220,16 @@ sanitizer-lib/             ← Parent project (packaging=pom)
 
 Each module maintains its own dependency set while inheriting common configuration from the parent build script.
 
+## Documentation
+
+- **API Javadoc**: [https://rabinarayanpatra.github.io/sanitizer-lib/](https://rabinarayanpatra.github.io/sanitizer-lib/)
+- **Changelog**: See [CHANGELOG.md](CHANGELOG.md)
+
 ## Release Management
 
 - **Version Strategy**: Adheres to [Semantic Versioning](https://semver.org/) principles
 - **Artifact Publishing**: Automated deployment to Maven Central via GitHub Actions
+- **Javadoc Publishing**: Automated deployment to GitHub Pages on release
 - **CI/CD Pipeline**: See `.github/workflows/release.yml` for implementation details
 
 ## Contribution Guidelines

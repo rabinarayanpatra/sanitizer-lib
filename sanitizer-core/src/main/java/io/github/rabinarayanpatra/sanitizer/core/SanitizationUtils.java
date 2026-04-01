@@ -40,6 +40,13 @@ public final class SanitizationUtils {
 			try {
 				final Field f = h.field;
 				final Object raw = f.get(bean);
+				if (raw == null) {
+					final Object clean = h.sanitizer.sanitize(null);
+					if (clean != null) {
+						f.set(bean, clean);
+					}
+					continue;
+				}
 				final Object clean = h.sanitizer.sanitize(raw);
 				f.set(bean, clean);
 			} catch (final IllegalAccessException e) {
@@ -48,35 +55,47 @@ public final class SanitizationUtils {
 								+ ". This may occur with Java records, JPMS strongly-encapsulated fields, "
 								+ "or final fields. Ensure the field is mutable and accessible.",
 						e);
+			} catch (final ClassCastException e) {
+				throw new IllegalStateException("Type mismatch: sanitizer " + h.sanitizer.getClass().getName()
+						+ " is not compatible with field '" + h.field.getName() + "' of type "
+						+ h.field.getType().getName() + " on " + bean.getClass().getName()
+						+ ". Ensure the sanitizer's generic type matches the field type.", e);
 			}
 		}
 	}
 
 	/**
-	 * Inspects the class to find fields annotated with {@link Sanitize} and builds
-	 * sanitizer handlers.
+	 * Inspects the class hierarchy to find fields annotated with {@link Sanitize}
+	 * and builds sanitizer handlers. Walks superclasses to support
+	 * {@code @MappedSuperclass} and other inheritance patterns.
 	 */
 	private static List<Holder> inspect(final Class<?> cls) {
 		final List<Holder> list = new ArrayList<>();
 
-		for (final Field field : cls.getDeclaredFields()) {
-			final Sanitize ann = field.getAnnotation(Sanitize.class);
-			if (ann == null) {
-				continue;
-			}
+		Class<?> current = cls;
+		while (current != null && current != Object.class) {
+			for (final Field field : current.getDeclaredFields()) {
+				final Sanitize[] annotations = field.getAnnotationsByType(Sanitize.class);
+				if (annotations.length == 0) {
+					continue;
+				}
 
-			field.setAccessible(true);
-			for (final Class<? extends FieldSanitizer<?>> sanitizerClass : ann.using()) {
-				try {
-					@SuppressWarnings("unchecked")
-					final FieldSanitizer<Object> sanitizer = (FieldSanitizer<Object>) sanitizerClass
-							.getDeclaredConstructor().newInstance();
-					list.add(new Holder(field, sanitizer));
-				} catch (final ReflectiveOperationException e) {
-					throw new SanitizerInstantiationException(
-							"Cannot instantiate sanitizer " + sanitizerClass.getName(), e);
+				field.setAccessible(true);
+				for (final Sanitize ann : annotations) {
+					for (final Class<? extends FieldSanitizer<?>> sanitizerClass : ann.using()) {
+						try {
+							@SuppressWarnings("unchecked")
+							final FieldSanitizer<Object> sanitizer = (FieldSanitizer<Object>) sanitizerClass
+									.getDeclaredConstructor().newInstance();
+							list.add(new Holder(field, sanitizer));
+						} catch (final ReflectiveOperationException e) {
+							throw new SanitizerInstantiationException(
+									"Cannot instantiate sanitizer " + sanitizerClass.getName(), e);
+						}
+					}
 				}
 			}
+			current = current.getSuperclass();
 		}
 
 		return list;

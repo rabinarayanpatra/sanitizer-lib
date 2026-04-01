@@ -1,6 +1,7 @@
 package io.github.rabinarayanpatra.sanitizer.annotation;
 
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -12,17 +13,28 @@ import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
  * the order listed.
  *
  * <p>
+ * This annotation is {@link Repeatable}, so multiple {@code @Sanitize}
+ * annotations can be stacked on the same field. Sanitizers are applied in
+ * declaration order.
+ *
+ * <p>
  * Example:
  *
- * <pre>{@code
- * public class Person {
- * 	@Sanitize(using = {TrimSanitizer.class, CollapseWhitespaceSanitizer.class, LowerCaseSanitizer.class})
- * 	private String fullName;
+ * <pre>
+ * {
+ * 	&#64;code
+ * 	public class Person {
+ * 		&#64;Sanitize(using = TrimSanitizer.class)
+ * 		&#64;Sanitize(using = CollapseWhitespaceSanitizer.class)
+ * 		@Sanitize(using = LowerCaseSanitizer.class)
+ * 		private String fullName;
+ * 	}
  * }
- * }</pre>
+ * </pre>
  *
  * @since 1.0.0
  */
+@Repeatable(Sanitizes.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Sanitize {

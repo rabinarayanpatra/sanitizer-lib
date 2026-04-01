@@ -7,7 +7,9 @@ import io.github.rabinarayanpatra.sanitizer.builtin.LowerCaseSanitizer;
 import io.github.rabinarayanpatra.sanitizer.builtin.TrimSanitizer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SanitizationUtilsTest {
 
@@ -31,16 +33,62 @@ class SanitizationUtilsTest {
 		bean.name = null;
 		// Should not throw — sanitizers handle null internally
 		SanitizationUtils.apply(bean);
+		assertNull(bean.name);
 	}
 
 	@Test
 	void apply_throwsOnInaccessibleField() {
 		final ImmutableRecord rec = new ImmutableRecord("  HELLO  ");
 		final IllegalStateException ex = assertThrows(IllegalStateException.class, () -> SanitizationUtils.apply(rec));
-		// Verify the exception message contains useful diagnostic info
-		assertEquals(true, ex.getMessage().contains("name"));
-		assertEquals(true, ex.getMessage().contains("ImmutableRecord"));
-		assertEquals(true, ex.getCause() instanceof IllegalAccessException);
+		assertTrue(ex.getMessage().contains("name"));
+		assertTrue(ex.getMessage().contains("ImmutableRecord"));
+		assertTrue(ex.getCause() instanceof IllegalAccessException);
+	}
+
+	// --- P0: @Repeatable support ---
+
+	@Test
+	void apply_repeatableSanitizeAnnotations() {
+		final RepeatableBean bean = new RepeatableBean();
+		bean.name = "  HELLO  ";
+		SanitizationUtils.apply(bean);
+		assertEquals("hello", bean.name);
+	}
+
+	// --- P0: Superclass field walking ---
+
+	@Test
+	void apply_sanitizesSuperclassFields() {
+		final ChildBean bean = new ChildBean();
+		bean.parentName = "  PARENT  ";
+		bean.childName = "  CHILD  ";
+		SanitizationUtils.apply(bean);
+		assertEquals("parent", bean.parentName);
+		assertEquals("child", bean.childName);
+	}
+
+	@Test
+	void apply_sanitizesDeepHierarchy() {
+		final GrandchildBean bean = new GrandchildBean();
+		bean.parentName = "  GRANDPARENT  ";
+		bean.childName = "  MIDDLE  ";
+		bean.grandchildName = "  LEAF  ";
+		SanitizationUtils.apply(bean);
+		assertEquals("grandparent", bean.parentName);
+		assertEquals("middle", bean.childName);
+		assertEquals("leaf", bean.grandchildName);
+	}
+
+	// --- P0: Type-safety guard ---
+
+	@Test
+	void apply_throwsOnTypeMismatch() {
+		final TypeMismatchBean bean = new TypeMismatchBean();
+		bean.count = 42;
+		final IllegalStateException ex = assertThrows(IllegalStateException.class, () -> SanitizationUtils.apply(bean));
+		assertTrue(ex.getMessage().contains("Type mismatch"));
+		assertTrue(ex.getMessage().contains("count"));
+		assertTrue(ex.getCause() instanceof ClassCastException);
 	}
 
 	// --- Test fixtures ---
@@ -48,6 +96,32 @@ class SanitizationUtilsTest {
 	static class MutableBean {
 		@Sanitize(using = {TrimSanitizer.class, LowerCaseSanitizer.class})
 		String name;
+	}
+
+	static class RepeatableBean {
+		@Sanitize(using = TrimSanitizer.class)
+		@Sanitize(using = LowerCaseSanitizer.class)
+		String name;
+	}
+
+	static class ParentBean {
+		@Sanitize(using = {TrimSanitizer.class, LowerCaseSanitizer.class})
+		String parentName;
+	}
+
+	static class ChildBean extends ParentBean {
+		@Sanitize(using = {TrimSanitizer.class, LowerCaseSanitizer.class})
+		String childName;
+	}
+
+	static class GrandchildBean extends ChildBean {
+		@Sanitize(using = {TrimSanitizer.class, LowerCaseSanitizer.class})
+		String grandchildName;
+	}
+
+	static class TypeMismatchBean {
+		@Sanitize(using = TrimSanitizer.class)
+		Integer count;
 	}
 
 	record ImmutableRecord(@Sanitize(using = TrimSanitizer.class) String name) {

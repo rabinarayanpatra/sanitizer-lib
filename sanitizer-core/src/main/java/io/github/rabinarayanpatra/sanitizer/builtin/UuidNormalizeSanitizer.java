@@ -2,6 +2,8 @@ package io.github.rabinarayanpatra.sanitizer.builtin;
 
 import java.util.UUID;
 
+import org.jspecify.annotations.Nullable;
+
 import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
 
 /**
@@ -41,7 +43,7 @@ public class UuidNormalizeSanitizer implements FieldSanitizer<String> {
 	 *         fails; {@code null} if input is null
 	 */
 	@Override
-	public String sanitize(final String in) {
+	public @Nullable String sanitize(final @Nullable String in) {
 		if (in == null) {
 			return null;
 		}
@@ -56,7 +58,7 @@ public class UuidNormalizeSanitizer implements FieldSanitizer<String> {
 			final UUID uuid = UUID.fromString(trimmed);
 			return uuid.toString();
 		} catch (final IllegalArgumentException e) {
-			return trimmed.toLowerCase();
+			return trimmed.toLowerCase(java.util.Locale.ROOT);
 		}
 	}
 }

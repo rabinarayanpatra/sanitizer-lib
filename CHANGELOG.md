@@ -21,6 +21,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 ### Added
 - `@Sanitizes` container annotation for `@Repeatable` support
+- Error Prone static analysis plugin — catches bugs at compile time
+- JSpecify `@NullMarked` / `@Nullable` annotations across all public API
+- `package-info.java` for all 7 packages with module-level Javadoc
+- JaCoCo code coverage reporting (HTML + XML)
+- Unit tests for all 16 built-in sanitizers (104 total tests across all modules)
+- `SanitizerAutoConfigurationTest` — verifies all 16 beans, registry, and Jackson module
+- Expanded `RegistryTest` — lookup, multiple sanitizers, unregistered sanitizer error
+- All `toLowerCase()`/`toUpperCase()` calls now use `Locale.ROOT` for locale-independent behavior
 
 ## [1.0.22] - 2025-xx-xx
 

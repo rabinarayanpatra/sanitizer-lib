@@ -3,6 +3,8 @@ package io.github.rabinarayanpatra.sanitizer.builtin;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 
+import org.jspecify.annotations.Nullable;
+
 import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
 
 /**
@@ -40,11 +42,11 @@ public class SlugifySanitizer implements FieldSanitizer<String> {
 	 * @return the slugified string, or {@code null} if input is {@code null}
 	 */
 	@Override
-	public String sanitize(final String in) {
+	public @Nullable String sanitize(final @Nullable String in) {
 		if (in == null) {
 			return null;
 		}
 		final String noAccent = Normalizer.normalize(in, Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
-		return noAccent.toLowerCase().replaceAll("[^a-z0-9]+", "-").replaceAll("(^-+)|(-+$)", "");
+		return noAccent.toLowerCase(java.util.Locale.ROOT).replaceAll("[^a-z0-9]+", "-").replaceAll("(^-+)|(-+$)", "");
 	}
 }

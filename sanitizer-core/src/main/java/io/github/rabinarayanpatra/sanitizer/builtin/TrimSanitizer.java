@@ -1,5 +1,7 @@
 package io.github.rabinarayanpatra.sanitizer.builtin;
 
+import org.jspecify.annotations.Nullable;
+
 import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
 
 /**
@@ -34,7 +36,7 @@ public class TrimSanitizer implements FieldSanitizer<String> {
 	 * @return the trimmed string, or {@code null} if input is {@code null}
 	 */
 	@Override
-	public String sanitize(final String input) {
+	public @Nullable String sanitize(final @Nullable String input) {
 		if (input == null) {
 			return null;
 		}

@@ -4,6 +4,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.7"
     id("com.diffplug.spotless") version "6.25.0"
     id("com.vanniktech.maven.publish") version "0.30.0"
+    id("net.ltgt.errorprone") version "4.1.0" apply false
 }
 
 allprojects {
@@ -20,6 +21,7 @@ subprojects {
     apply(plugin = "io.spring.dependency-management")
     apply(plugin = "com.vanniktech.maven.publish")
     apply(plugin = "jacoco")
+    apply(plugin = "net.ltgt.errorprone")
 
     java {
         toolchain {
@@ -47,6 +49,8 @@ subprojects {
 
     dependencies {
         testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+        "errorprone"("com.google.errorprone:error_prone_core:2.36.0")
+        "api"("org.jspecify:jspecify:1.0.0")
     }
 
     mavenPublishing {

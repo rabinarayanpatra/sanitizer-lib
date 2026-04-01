@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.jspecify.annotations.Nullable;
+
 import io.github.rabinarayanpatra.sanitizer.annotation.Sanitize;
 
 /**
@@ -28,7 +30,7 @@ public final class SanitizationUtils {
 	 * @param bean
 	 *            the object whose fields should be sanitized
 	 */
-	public static void apply(final Object bean) {
+	public static void apply(final @Nullable Object bean) {
 		if (bean == null) {
 			return;
 		}

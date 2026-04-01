@@ -1,5 +1,7 @@
 package io.github.rabinarayanpatra.sanitizer.builtin;
 
+import org.jspecify.annotations.Nullable;
+
 import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
 
 /**
@@ -34,7 +36,7 @@ public class LowerCaseSanitizer implements FieldSanitizer<String> {
 	 * @return the lowercase string, or {@code null} if input is {@code null}
 	 */
 	@Override
-	public String sanitize(final String input) {
-		return input == null ? null : input.toLowerCase();
+	public @Nullable String sanitize(final @Nullable String input) {
+		return input == null ? null : input.toLowerCase(java.util.Locale.ROOT);
 	}
 }

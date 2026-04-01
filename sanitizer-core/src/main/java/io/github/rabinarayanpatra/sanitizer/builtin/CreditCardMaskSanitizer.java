@@ -1,5 +1,7 @@
 package io.github.rabinarayanpatra.sanitizer.builtin;
 
+import org.jspecify.annotations.Nullable;
+
 import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
 
 /**
@@ -37,7 +39,7 @@ public class CreditCardMaskSanitizer implements FieldSanitizer<String> {
 	 *         digits remain; returns {@code null} if the input is {@code null}
 	 */
 	@Override
-	public String sanitize(final String input) {
+	public @Nullable String sanitize(final @Nullable String input) {
 		if (input == null) {
 			return null;
 		}

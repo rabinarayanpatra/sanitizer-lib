@@ -1,5 +1,7 @@
 package io.github.rabinarayanpatra.sanitizer.builtin;
 
+import org.jspecify.annotations.Nullable;
+
 import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
 
 /**
@@ -35,7 +37,7 @@ public class CollapseWhitespaceSanitizer implements FieldSanitizer<String> {
 	 * @return the sanitized string, or {@code null} if the input was {@code null}
 	 */
 	@Override
-	public String sanitize(final String in) {
+	public @Nullable String sanitize(final @Nullable String in) {
 		if (in == null) {
 			return null;
 		}

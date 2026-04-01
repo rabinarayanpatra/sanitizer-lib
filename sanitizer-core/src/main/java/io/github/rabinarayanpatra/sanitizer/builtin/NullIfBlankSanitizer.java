@@ -1,5 +1,7 @@
 package io.github.rabinarayanpatra.sanitizer.builtin;
 
+import org.jspecify.annotations.Nullable;
+
 import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
 
 /**
@@ -37,7 +39,7 @@ public class NullIfBlankSanitizer implements FieldSanitizer<String> {
 	 *         original string
 	 */
 	@Override
-	public String sanitize(final String in) {
+	public @Nullable String sanitize(final @Nullable String in) {
 		if (in == null) {
 			return null;
 		}

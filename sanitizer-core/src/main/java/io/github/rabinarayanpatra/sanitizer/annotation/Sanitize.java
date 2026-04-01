@@ -28,7 +28,7 @@ import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
  * 	public class Person {
  * 		&#64;Sanitize(using = TrimSanitizer.class)
  * 		&#64;Sanitize(using = CollapseWhitespaceSanitizer.class)
- * 		@Sanitize(using = LowerCaseSanitizer.class)
+ * 		&#64;Sanitize(using = LowerCaseSanitizer.class)
  * 		private String fullName;
  * 	}
  * }

@@ -1,5 +1,7 @@
 package io.github.rabinarayanpatra.sanitizer.core;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Strategy interface for sanitizing a single field value.
  *
@@ -15,5 +17,6 @@ public interface FieldSanitizer<T> {
 	 *            the raw value (maybe null)
 	 * @return the sanitized value (maybe null)
 	 */
-	T sanitize(T input);
+	@Nullable
+	T sanitize(@Nullable T input);
 }

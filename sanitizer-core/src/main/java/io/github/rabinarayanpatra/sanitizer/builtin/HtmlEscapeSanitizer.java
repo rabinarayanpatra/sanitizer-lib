@@ -1,5 +1,7 @@
 package io.github.rabinarayanpatra.sanitizer.builtin;
 
+import org.jspecify.annotations.Nullable;
+
 import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
 
 /**
@@ -17,11 +19,9 @@ import io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer;
  * Sanitizer.
  *
  * <pre>
- * {@code
- * String input = "<script>alert('xss')</script>";
+ * String input = "&lt;script&gt;alert('xss')&lt;/script&gt;";
  * String escaped = new HtmlEscapeSanitizer().sanitize(input);
- * // "&lt;script&gt;alert(&#x27;xss&#x27;)&lt;/script&gt;"
- * }
+ * // "&amp;lt;script&amp;gt;alert(&amp;#x27;xss&amp;#x27;)&amp;lt;/script&amp;gt;"
  * </pre>
  *
  * @see FieldSanitizer
@@ -43,7 +43,7 @@ public class HtmlEscapeSanitizer implements FieldSanitizer<String> {
 	 * @return the escaped string, or {@code null} if input is {@code null}
 	 */
 	@Override
-	public String sanitize(final String in) {
+	public @Nullable String sanitize(final @Nullable String in) {
 		if (in == null) {
 			return null;
 		}

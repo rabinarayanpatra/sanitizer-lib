@@ -1,7 +1,7 @@
 # Sanitizer-Lib
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.rabinarayanpatra.sanitizer/sanitizer-core.svg)](https://central.sonatype.com/namespace/io.github.rabinarayanpatra.sanitizer)
-[![Javadoc](https://img.shields.io/badge/javadoc-online-blue.svg)](https://rabinarayanpatra.github.io/sanitizer-lib/)
+[![Javadoc](https://img.shields.io/badge/javadoc-online-blue.svg)](https://rabinarayanpatra.github.io/sanitizer-lib/javadoc/)
 
 ## Overview
 
@@ -222,7 +222,7 @@ Each module maintains its own dependency set while inheriting common configurati
 
 ## Documentation
 
-- **API Javadoc**: [https://rabinarayanpatra.github.io/sanitizer-lib/](https://rabinarayanpatra.github.io/sanitizer-lib/)
+- **API Javadoc**: [https://rabinarayanpatra.github.io/sanitizer-lib/javadoc/](https://rabinarayanpatra.github.io/sanitizer-lib/javadoc/)
 - **Changelog**: See [CHANGELOG.md](CHANGELOG.md)
 
 ## Release Management

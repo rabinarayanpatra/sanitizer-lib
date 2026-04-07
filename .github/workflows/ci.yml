@@ -6,9 +6,6 @@ on:
   pull_request:
     branches: [ "master" ]
 
-permissions:
-  contents: write
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -29,25 +26,9 @@ jobs:
     - name: Build and test
       run: ./gradlew check jacocoAggregatedReport
 
-    - name: Generate JaCoCo coverage badge
-      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      id: jacoco
-      uses: cicirello/jacoco-badge-generator@v2
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v5
       with:
-        jacoco-csv-file: build/reports/jacoco/aggregated/jacoco.xml
-        badges-directory: .github/badges
-        generate-coverage-badge: true
-        generate-branches-badge: true
-        coverage-badge-filename: jacoco.svg
-        branches-badge-filename: branches.svg
-
-    - name: Commit coverage badges
-      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      run: |
-        if [ -n "$(git status --porcelain .github/badges)" ]; then
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .github/badges
-          git commit -m "ci: update coverage badges [skip ci]"
-          git push
-        fi
+        files: build/reports/jacoco/aggregated/jacoco.xml
+        fail_ci_if_error: false
+        token: ${{ secrets.CODECOV_TOKEN }}

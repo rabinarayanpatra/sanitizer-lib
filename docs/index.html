@@ -1,409 +1,341 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Sanitizer-Lib — Java Input Sanitization for Spring Boot &amp; JPA</title>
-<meta name="description" content="Sanitizer-Lib is a declarative Java input sanitization library for Spring Boot and JPA. Trim, mask, normalize, and escape fields with a single @Sanitize annotation. 17+ built-in sanitizers, zero-config autoconfiguration, extensible API." />
-<meta name="keywords" content="java input sanitization, spring boot sanitize, jpa entity sanitization, xss prevention java, java sanitizer library, declarative sanitization, field sanitization annotation, input validation java" />
+<title>Sanitizer-Lib — Declarative input sanitization for Java</title>
+<meta name="description" content="A small, declarative input sanitization library for Java, Spring Boot, and JPA. One @Sanitize annotation, 17 built-in sanitizers, zero configuration." />
+<meta name="keywords" content="java input sanitization, spring boot sanitize, jpa entity sanitization, xss prevention java, java sanitizer library, @Sanitize annotation, field sanitization" />
 <meta name="author" content="Rabinarayan Patra" />
 <link rel="canonical" href="https://rabinarayanpatra.github.io/sanitizer-lib/" />
 
-<!-- Open Graph -->
 <meta property="og:type" content="website" />
-<meta property="og:title" content="Sanitizer-Lib — Java Input Sanitization for Spring Boot & JPA" />
-<meta property="og:description" content="Declarative Java input sanitization. 17+ built-in sanitizers. Zero-config Spring Boot & JPA integration." />
+<meta property="og:title" content="Sanitizer-Lib — Declarative input sanitization for Java" />
+<meta property="og:description" content="A small, declarative input sanitization library for Java, Spring Boot, and JPA." />
 <meta property="og:url" content="https://rabinarayanpatra.github.io/sanitizer-lib/" />
-<meta property="og:site_name" content="Sanitizer-Lib" />
+<meta name="twitter:card" content="summary" />
 
-<!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Sanitizer-Lib — Java Input Sanitization for Spring Boot & JPA" />
-<meta name="twitter:description" content="Declarative Java input sanitization. 17+ built-in sanitizers. Zero-config Spring Boot & JPA integration." />
-
-<!-- Schema.org -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "SoftwareSourceCode",
   "name": "Sanitizer-Lib",
-  "description": "Enterprise-grade declarative input sanitization framework for Java with Spring Boot and JPA integration.",
+  "description": "Declarative input sanitization framework for Java with Spring Boot and JPA integration.",
   "codeRepository": "https://github.com/rabinarayanpatra/sanitizer-lib",
   "programmingLanguage": "Java",
   "license": "https://opensource.org/licenses/MIT",
-  "author": {
-    "@type": "Person",
-    "name": "Rabinarayan Patra",
-    "url": "https://github.com/rabinarayanpatra"
-  }
+  "author": { "@type": "Person", "name": "Rabinarayan Patra", "url": "https://github.com/rabinarayanpatra" }
 }
 </script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap" rel="stylesheet" />
 
 <style>
   :root {
-    --bg: #09090b;
-    --bg-elev: #111114;
-    --bg-card: #131318;
-    --border: #26262d;
-    --border-strong: #34343d;
-    --text: #f4f4f5;
-    --text-muted: #a1a1aa;
-    --text-dim: #71717a;
-    --accent: #f97316;
-    --accent-soft: rgba(249, 115, 22, 0.12);
-    --green: #22c55e;
+    --bg: #faf8f3;
+    --ink: #1a1816;
+    --ink-soft: #4a4742;
+    --ink-mute: #8a857c;
+    --rule: #e8e3d7;
+    --rule-strong: #d4cfc0;
+    --accent: #b4421f;
+    --code-bg: #f3efe4;
   }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #15140f;
+      --ink: #f0ebde;
+      --ink-soft: #c5bfae;
+      --ink-mute: #7a7567;
+      --rule: #2a2820;
+      --rule-strong: #3a3729;
+      --accent: #e8744a;
+      --code-bg: #1d1b15;
+    }
+  }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
+  html { -webkit-text-size-adjust: 100%; }
   body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
     background: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.7;
     -webkit-font-smoothing: antialiased;
-    background-image:
-      radial-gradient(ellipse 60% 40% at 50% 0%, rgba(249, 115, 22, 0.08), transparent 70%),
-      radial-gradient(ellipse 40% 30% at 80% 20%, rgba(59, 130, 246, 0.04), transparent 70%);
+    text-rendering: optimizeLegibility;
   }
-  code, pre { font-family: 'JetBrains Mono', ui-monospace, monospace; }
-  a { color: inherit; text-decoration: none; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.15s; }
+  a:hover { border-bottom-color: var(--accent); }
 
-  .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 1.75rem; }
 
-  /* Nav */
-  nav {
-    position: sticky; top: 0; z-index: 50;
-    backdrop-filter: blur(12px);
-    background: rgba(9, 9, 11, 0.7);
-    border-bottom: 1px solid var(--border);
+  header {
+    padding: 3rem 0 1.5rem;
+    border-bottom: 1px solid var(--rule);
   }
-  .nav-inner {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 1rem 1.5rem; max-width: 1100px; margin: 0 auto;
+  .topline {
+    display: flex; justify-content: space-between; align-items: baseline;
+    color: var(--ink-mute); font-size: 12px;
+    margin-bottom: 3.5rem;
   }
-  .logo { font-weight: 700; font-size: 1.05rem; letter-spacing: -0.01em; }
-  .logo span { color: var(--accent); }
-  .nav-links { display: flex; gap: 1.75rem; align-items: center; font-size: 0.9rem; color: var(--text-muted); }
-  .nav-links a:hover { color: var(--text); }
-  .nav-links .gh-btn {
-    padding: 0.45rem 0.9rem; border: 1px solid var(--border-strong); border-radius: 8px;
-    color: var(--text); font-weight: 500; transition: all 0.15s;
-  }
-  .nav-links .gh-btn:hover { background: var(--bg-elev); border-color: var(--accent); }
+  .topline .links { display: flex; gap: 1.5rem; }
+  .topline a { color: var(--ink-soft); }
 
-  /* Hero */
-  .hero { padding: 6rem 0 5rem; text-align: center; }
-  .badge-pill {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    padding: 0.35rem 0.85rem; border-radius: 999px;
-    background: var(--accent-soft); border: 1px solid rgba(249, 115, 22, 0.25);
-    color: var(--accent); font-size: 0.8rem; font-weight: 500;
+  h1 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(2.4rem, 6vw, 3.4rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.25rem;
+    font-variation-settings: "opsz" 144;
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .tagline {
+    color: var(--ink-soft);
+    font-size: 14px;
+    max-width: 38em;
+    margin-bottom: 2rem;
+  }
+  .meta {
+    display: flex; gap: 1.5rem; flex-wrap: wrap;
+    font-size: 12px; color: var(--ink-mute);
+    padding-top: 1rem;
+  }
+  .meta span::before { content: "→ "; color: var(--ink-mute); }
+
+  section {
+    padding: 3rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  section:last-of-type { border-bottom: none; }
+
+  h2 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-mute);
     margin-bottom: 1.75rem;
   }
-  .badge-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
-  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-  h1 {
-    font-size: clamp(2.25rem, 5vw, 3.75rem);
-    font-weight: 800; letter-spacing: -0.03em; line-height: 1.05;
-    margin-bottom: 1.25rem;
-  }
-  h1 .gradient {
-    background: linear-gradient(135deg, #f97316 0%, #fbbf24 100%);
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-  }
-  .hero p.lead {
-    font-size: 1.15rem; color: var(--text-muted);
-    max-width: 640px; margin: 0 auto 2.25rem;
-  }
-  .cta-row { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
-  .btn {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    padding: 0.75rem 1.4rem; border-radius: 10px;
-    font-weight: 500; font-size: 0.95rem;
-    transition: all 0.15s; border: 1px solid transparent;
-  }
-  .btn-primary { background: var(--accent); color: #0a0a0a; }
-  .btn-primary:hover { background: #fb923c; transform: translateY(-1px); }
-  .btn-secondary { background: var(--bg-elev); color: var(--text); border-color: var(--border-strong); }
-  .btn-secondary:hover { border-color: var(--accent); background: var(--bg-card); }
+  h2::before { content: "§ "; color: var(--rule-strong); }
 
-  .badges-row {
-    display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;
-    margin-top: 2.5rem;
-  }
-  .badges-row img { height: 22px; }
+  p { margin-bottom: 1rem; color: var(--ink-soft); max-width: 38em; }
+  p strong { color: var(--ink); font-weight: 500; }
 
-  /* Sections */
-  section { padding: 4rem 0; }
-  .section-label {
-    display: inline-block;
-    font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em;
-    color: var(--accent); text-transform: uppercase; margin-bottom: 0.75rem;
-  }
-  h2 {
-    font-size: clamp(1.75rem, 3.5vw, 2.25rem);
-    font-weight: 700; letter-spacing: -0.02em; margin-bottom: 1rem;
-  }
-  .section-lead { color: var(--text-muted); max-width: 580px; margin-bottom: 2.5rem; }
-
-  /* Features */
-  .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
-  .feature {
-    background: var(--bg-card); border: 1px solid var(--border);
-    border-radius: 12px; padding: 1.5rem; transition: border-color 0.15s;
-  }
-  .feature:hover { border-color: var(--border-strong); }
-  .feature .icon {
-    width: 38px; height: 38px; border-radius: 9px;
-    background: var(--accent-soft); color: var(--accent);
-    display: flex; align-items: center; justify-content: center;
-    margin-bottom: 1rem; font-size: 1.1rem;
-  }
-  .feature h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
-  .feature p { color: var(--text-muted); font-size: 0.9rem; }
-
-  /* Code block */
-  .code-section { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: center; }
-  @media (max-width: 800px) { .code-section { grid-template-columns: 1fr; } }
-  .code-block {
-    background: #0c0c10; border: 1px solid var(--border);
-    border-radius: 12px; overflow: hidden;
-  }
-  .code-header {
-    display: flex; align-items: center; gap: 0.5rem;
-    padding: 0.75rem 1rem; border-bottom: 1px solid var(--border);
-    background: var(--bg-elev);
-  }
-  .code-header .dots { display: flex; gap: 0.35rem; }
-  .code-header .dots span {
-    width: 11px; height: 11px; border-radius: 50%;
-    background: #3f3f46;
-  }
-  .code-header .filename {
-    margin-left: 0.5rem; font-size: 0.78rem;
-    color: var(--text-dim); font-family: 'JetBrains Mono', monospace;
-  }
   pre {
-    padding: 1.25rem; overflow-x: auto; font-size: 0.85rem; line-height: 1.65;
+    background: var(--code-bg);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 1rem 1.25rem;
+    overflow-x: auto;
+    font-size: 12.5px;
+    line-height: 1.7;
+    margin: 1.25rem 0;
   }
-  .tok-key { color: #c084fc; }
-  .tok-ann { color: #fbbf24; }
-  .tok-cls { color: #60a5fa; }
-  .tok-str { color: #86efac; }
-  .tok-com { color: #52525b; font-style: italic; }
+  code { font-family: 'JetBrains Mono', monospace; font-size: 0.92em; }
+  p code, li code { background: var(--code-bg); padding: 0.1em 0.35em; border-radius: 2px; color: var(--ink); }
 
-  /* Sanitizers grid */
-  .sanitizers {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 0.5rem;
-  }
-  .san-pill {
-    padding: 0.7rem 0.9rem; background: var(--bg-card);
-    border: 1px solid var(--border); border-radius: 8px;
-    font-size: 0.85rem;
-  }
-  .san-pill code {
-    color: var(--accent); font-size: 0.82rem; display: block;
-    font-weight: 600; margin-bottom: 0.15rem;
-  }
-  .san-pill span { color: var(--text-dim); font-size: 0.75rem; }
+  .tok-c { color: var(--ink-mute); font-style: italic; }
+  .tok-k { color: var(--accent); }
+  .tok-s { color: var(--ink); }
 
-  /* Install */
-  .install-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-  @media (max-width: 700px) { .install-grid { grid-template-columns: 1fr; } }
+  .install { margin-top: 1rem; }
+  .install-label {
+    font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--ink-mute);
+    margin-top: 1.25rem; margin-bottom: 0.25rem;
+  }
 
-  /* Footer */
+  ul.dash { list-style: none; margin: 1rem 0; }
+  ul.dash li {
+    color: var(--ink-soft);
+    padding-left: 1.5rem;
+    position: relative;
+    margin-bottom: 0.5rem;
+  }
+  ul.dash li::before {
+    content: "—";
+    position: absolute; left: 0;
+    color: var(--ink-mute);
+  }
+  ul.dash li b { color: var(--ink); font-weight: 500; }
+
+  table.sanitizers {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    font-size: 12.5px;
+  }
+  table.sanitizers td {
+    padding: 0.5rem 0.5rem 0.5rem 0;
+    border-bottom: 1px dashed var(--rule);
+    vertical-align: top;
+  }
+  table.sanitizers td:first-child {
+    color: var(--accent);
+    white-space: nowrap;
+    padding-right: 1.5rem;
+    width: 1%;
+  }
+  table.sanitizers td:last-child { color: var(--ink-soft); }
+
   footer {
-    border-top: 1px solid var(--border); margin-top: 4rem;
-    padding: 2.5rem 0; text-align: center; color: var(--text-dim); font-size: 0.85rem;
+    padding: 2.5rem 0 4rem;
+    color: var(--ink-mute);
+    font-size: 11px;
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
   }
-  footer a { color: var(--text-muted); }
-  footer a:hover { color: var(--accent); }
-  .footer-links { display: flex; gap: 1.5rem; justify-content: center; margin-bottom: 1rem; flex-wrap: wrap; }
+  footer a { color: var(--ink-soft); }
+
+  ::selection { background: var(--accent); color: var(--bg); }
 </style>
 </head>
 <body>
 
-<nav>
-  <div class="nav-inner">
-    <div class="logo">sanitizer<span>-lib</span></div>
-    <div class="nav-links">
-      <a href="#features">Features</a>
-      <a href="#install">Install</a>
-      <a href="#sanitizers">Sanitizers</a>
-      <a href="javadoc/">Javadoc</a>
-      <a class="gh-btn" href="https://github.com/rabinarayanpatra/sanitizer-lib" target="_blank" rel="noopener">GitHub →</a>
-    </div>
-  </div>
-</nav>
+<div class="wrap">
 
-<header class="hero">
-  <div class="container">
-    <div class="badge-pill"><span class="dot"></span> v1.1.0 · Available on Maven Central</div>
-    <h1>Declarative input sanitization<br/>for <span class="gradient">Java &amp; Spring Boot</span></h1>
-    <p class="lead">
-      A lightweight, annotation-driven sanitization framework. Trim, mask, normalize, and escape your DTOs and JPA entities with one line — no boilerplate, no runtime surprises.
+  <header>
+    <div class="topline">
+      <span>sanitizer-lib · v1.1.0</span>
+      <div class="links">
+        <a href="javadoc/">javadoc</a>
+        <a href="https://github.com/rabinarayanpatra/sanitizer-lib">github</a>
+        <a href="https://central.sonatype.com/namespace/io.github.rabinarayanpatra.sanitizer">maven</a>
+      </div>
+    </div>
+
+    <h1>Declarative input<br/><em>sanitization</em> for Java.</h1>
+    <p class="tagline">
+      A small library for Spring Boot and JPA. Annotate a field with <code>@Sanitize</code>
+      and the framework trims, masks, normalizes, or escapes it before your code ever sees it.
     </p>
-    <div class="cta-row">
-      <a class="btn btn-primary" href="#install">Get Started →</a>
-      <a class="btn btn-secondary" href="javadoc/">Read the Javadoc</a>
-      <a class="btn btn-secondary" href="https://github.com/rabinarayanpatra/sanitizer-lib" target="_blank" rel="noopener">Star on GitHub</a>
+    <div class="meta">
+      <span>Java 21</span>
+      <span>Spring Boot 3.4+</span>
+      <span>17 built-in sanitizers</span>
+      <span>MIT licensed</span>
     </div>
-    <div class="badges-row">
-      <a href="https://central.sonatype.com/namespace/io.github.rabinarayanpatra.sanitizer"><img alt="Maven Central" src="https://img.shields.io/maven-central/v/io.github.rabinarayanpatra.sanitizer/sanitizer-core?style=flat-square&color=f97316" /></a>
-      <a href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square" /></a>
-      <img alt="Java 21" src="https://img.shields.io/badge/Java-21-blue.svg?style=flat-square" />
-      <a href="https://rabinarayanpatra.github.io/sanitizer-lib/javadoc/"><img alt="Javadoc" src="https://img.shields.io/badge/javadoc-online-blue.svg?style=flat-square" /></a>
-    </div>
-  </div>
-</header>
+  </header>
 
-<section id="features">
-  <div class="container">
-    <span class="section-label">Why Sanitizer-Lib</span>
-    <h2>Built for real-world Java apps</h2>
-    <p class="section-lead">A focused sanitization layer that drops into Spring Boot and JPA without ceremony.</p>
-    <div class="features">
-      <div class="feature">
-        <div class="icon">⚡</div>
-        <h3>Zero-config Spring Boot</h3>
-        <p>Autoconfiguration wires Jackson and the registry on startup. Just add the dependency.</p>
-      </div>
-      <div class="feature">
-        <div class="icon">🗄</div>
-        <h3>JPA lifecycle hooks</h3>
-        <p>Sanitize entity fields automatically during <code>@PrePersist</code> and <code>@PreUpdate</code>.</p>
-      </div>
-      <div class="feature">
-        <div class="icon">🧩</div>
-        <h3>17+ built-in sanitizers</h3>
-        <p>Trim, mask credit cards, slugify, normalize phone numbers, escape HTML, and more.</p>
-      </div>
-      <div class="feature">
-        <div class="icon">🔧</div>
-        <h3>Configurable &amp; extensible</h3>
-        <p>Pass parameters via <code>params="..."</code> or write your own <code>FieldSanitizer&lt;T&gt;</code>.</p>
-      </div>
-      <div class="feature">
-        <div class="icon">📦</div>
-        <h3>Modular architecture</h3>
-        <p>Use <code>sanitizer-core</code> alone, or pull in the Spring or JPA modules as you need them.</p>
-      </div>
-      <div class="feature">
-        <div class="icon">🛡</div>
-        <h3>Security-first defaults</h3>
-        <p>HTML escape, SSN/IBAN masking, and safe filename normalization out of the box.</p>
-      </div>
-    </div>
-  </div>
-</section>
+  <section id="install">
+    <h2>install</h2>
+    <p>Available on Maven Central. Pull in the integration you need.</p>
 
-<section>
-  <div class="container">
-    <span class="section-label">In Action</span>
-    <h2>One annotation. Done.</h2>
-    <div class="code-section">
-      <p style="color: var(--text-muted);">
-        Annotate any field with <code style="color: var(--accent);">@Sanitize</code> and chain one or more sanitizers. The framework intercepts Jackson deserialization for DTOs and JPA lifecycle events for entities — no manual calls, no missed fields.
-      </p>
-      <div class="code-block">
-        <div class="code-header">
-          <div class="dots"><span></span><span></span><span></span></div>
-          <span class="filename">UserDto.java</span>
-        </div>
-<pre><span class="tok-key">public class</span> <span class="tok-cls">UserDto</span> {
+    <div class="install-label">build.gradle.kts</div>
+<pre><span class="tok-c">// Spring Boot</span>
+implementation(<span class="tok-k">"io.github.rabinarayanpatra.sanitizer:sanitizer-spring:1.1.0"</span>)
 
-  <span class="tok-ann">@Sanitize</span>(using = {
-    <span class="tok-cls">TrimSanitizer</span>.<span class="tok-key">class</span>,
-    <span class="tok-cls">LowerCaseSanitizer</span>.<span class="tok-key">class</span>
-  })
-  <span class="tok-key">private</span> <span class="tok-cls">String</span> email;
+<span class="tok-c">// JPA (optional)</span>
+implementation(<span class="tok-k">"io.github.rabinarayanpatra.sanitizer:sanitizer-jpa:1.1.0"</span>)</pre>
 
-  <span class="tok-ann">@Sanitize</span>(using = <span class="tok-cls">CreditCardMaskSanitizer</span>.<span class="tok-key">class</span>)
-  <span class="tok-key">private</span> <span class="tok-cls">String</span> cardNumber;
+    <div class="install-label">pom.xml</div>
+<pre>&lt;dependency&gt;
+  &lt;groupId&gt;io.github.rabinarayanpatra.sanitizer&lt;/groupId&gt;
+  &lt;artifactId&gt;sanitizer-spring&lt;/artifactId&gt;
+  &lt;version&gt;1.1.0&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+  </section>
 
-  <span class="tok-com">// getters &amp; setters</span>
+  <section id="usage">
+    <h2>usage</h2>
+    <p>Annotate any field. Chain multiple sanitizers; they run in order.</p>
+
+<pre><span class="tok-c">// DTO — sanitized on Jackson deserialization</span>
+public class UserDto {
+
+  @Sanitize(using = { TrimSanitizer.class, LowerCaseSanitizer.class })
+  private String email;
+
+  @Sanitize(using = CreditCardMaskSanitizer.class)
+  private String cardNumber;
 }</pre>
-      </div>
-    </div>
-  </div>
-</section>
 
-<section id="install">
-  <div class="container">
-    <span class="section-label">Install</span>
-    <h2>Add it to your build</h2>
-    <p class="section-lead">Available on Maven Central. Spring Boot 3.4+ and Java 21.</p>
-    <div class="install-grid">
-      <div class="code-block">
-        <div class="code-header">
-          <div class="dots"><span></span><span></span><span></span></div>
-          <span class="filename">build.gradle.kts</span>
-        </div>
-<pre><span class="tok-com">// Spring Boot integration</span>
-implementation(<span class="tok-str">"io.github.rabinarayanpatra.sanitizer:sanitizer-spring:1.1.0"</span>)
+<pre><span class="tok-c">// JPA entity — sanitized on @PrePersist / @PreUpdate</span>
+@Entity
+@EntityListeners(SanitizationEntityListener.class)
+public class Payment {
 
-<span class="tok-com">// JPA integration (optional)</span>
-implementation(<span class="tok-str">"io.github.rabinarayanpatra.sanitizer:sanitizer-jpa:1.1.0"</span>)</pre>
-      </div>
-      <div class="code-block">
-        <div class="code-header">
-          <div class="dots"><span></span><span></span><span></span></div>
-          <span class="filename">pom.xml</span>
-        </div>
-<pre>&lt;<span class="tok-cls">dependency</span>&gt;
-  &lt;<span class="tok-cls">groupId</span>&gt;io.github.rabinarayanpatra.sanitizer&lt;/<span class="tok-cls">groupId</span>&gt;
-  &lt;<span class="tok-cls">artifactId</span>&gt;sanitizer-spring&lt;/<span class="tok-cls">artifactId</span>&gt;
-  &lt;<span class="tok-cls">version</span>&gt;1.1.0&lt;/<span class="tok-cls">version</span>&gt;
-&lt;/<span class="tok-cls">dependency</span>&gt;</pre>
-      </div>
-    </div>
-  </div>
-</section>
+  @Id @GeneratedValue
+  private Long id;
 
-<section id="sanitizers">
-  <div class="container">
-    <span class="section-label">Built-in</span>
-    <h2>17+ ready-to-use sanitizers</h2>
-    <p class="section-lead">Composable, production-tested, and extensible. Mix and match with custom sanitizers.</p>
-    <div class="sanitizers">
-      <div class="san-pill"><code>@TrimSanitizer</code><span>Strip whitespace</span></div>
-      <div class="san-pill"><code>@LowerCaseSanitizer</code><span>Lowercase text</span></div>
-      <div class="san-pill"><code>@UpperCaseSanitizer</code><span>Uppercase text</span></div>
-      <div class="san-pill"><code>@TitleCaseSanitizer</code><span>Capitalize words</span></div>
-      <div class="san-pill"><code>@CollapseWhitespace</code><span>Collapse spaces</span></div>
-      <div class="san-pill"><code>@CreditCardMask</code><span>Mask card numbers</span></div>
-      <div class="san-pill"><code>@SSNMaskSanitizer</code><span>Mask US SSN</span></div>
-      <div class="san-pill"><code>@IBANMaskSanitizer</code><span>Mask IBAN</span></div>
-      <div class="san-pill"><code>@EmailAliasStrip</code><span>Drop +alias</span></div>
-      <div class="san-pill"><code>@HtmlEscapeSanitizer</code><span>XSS prevention</span></div>
-      <div class="san-pill"><code>@SlugifySanitizer</code><span>URL-friendly slugs</span></div>
-      <div class="san-pill"><code>@SafeFilename</code><span>FS-safe names</span></div>
-      <div class="san-pill"><code>@PhoneE164Sanitizer</code><span>Normalize phones</span></div>
-      <div class="san-pill"><code>@UuidNormalize</code><span>Validate UUIDs</span></div>
-      <div class="san-pill"><code>@NullIfBlank</code><span>Null empty strings</span></div>
-      <div class="san-pill"><code>@RemoveNonPrintable</code><span>Strip control chars</span></div>
-      <div class="san-pill"><code>@TruncateSanitizer</code><span>Configurable length</span></div>
-    </div>
-  </div>
-</section>
+  @Sanitize(using = CreditCardMaskSanitizer.class)
+  private String cardNumber;
+}</pre>
 
-<footer>
-  <div class="container">
-    <div class="footer-links">
-      <a href="https://github.com/rabinarayanpatra/sanitizer-lib">GitHub</a>
-      <a href="javadoc/">Javadoc</a>
-      <a href="https://central.sonatype.com/namespace/io.github.rabinarayanpatra.sanitizer">Maven Central</a>
-      <a href="https://github.com/rabinarayanpatra/sanitizer-lib/blob/master/CHANGELOG.md">Changelog</a>
-      <a href="https://github.com/rabinarayanpatra/sanitizer-lib/blob/master/LICENSE.md">License</a>
-    </div>
-    <div>MIT Licensed · Built by <a href="https://github.com/rabinarayanpatra">Rabinarayan Patra</a></div>
-  </div>
-</footer>
+    <p>No registry calls. No interceptor wiring. Spring Boot autoconfiguration handles the Jackson module and sanitizer registry on startup.</p>
+  </section>
 
+  <section id="why">
+    <h2>why</h2>
+    <ul class="dash">
+      <li><b>Declarative.</b> One annotation. Sanitization lives next to the field it protects.</li>
+      <li><b>Composable.</b> Chain sanitizers in any order. Mix built-ins with your own.</li>
+      <li><b>Framework-aware.</b> Hooks into Jackson for DTOs and JPA listeners for entities — no manual calls.</li>
+      <li><b>Configurable.</b> Pass parameters via <code>params="maxLength=100,suffix=..."</code>.</li>
+      <li><b>Modular.</b> <code>sanitizer-core</code> stands alone. Add <code>-spring</code> or <code>-jpa</code> only if you need them.</li>
+    </ul>
+  </section>
+
+  <section id="sanitizers">
+    <h2>built-in sanitizers</h2>
+    <table class="sanitizers">
+      <tr><td>TrimSanitizer</td><td>strip leading and trailing whitespace</td></tr>
+      <tr><td>CollapseWhitespace</td><td>collapse internal whitespace to single space</td></tr>
+      <tr><td>LowerCaseSanitizer</td><td>normalize to lowercase</td></tr>
+      <tr><td>UpperCaseSanitizer</td><td>normalize to uppercase</td></tr>
+      <tr><td>TitleCaseSanitizer</td><td>capitalize the first letter of each word</td></tr>
+      <tr><td>NullIfBlank</td><td>return null if the string is blank</td></tr>
+      <tr><td>RemoveNonPrintable</td><td>filter non-printable control characters</td></tr>
+      <tr><td>HtmlEscapeSanitizer</td><td>escape HTML special characters (XSS-safe)</td></tr>
+      <tr><td>SlugifySanitizer</td><td>convert to URL-friendly slug</td></tr>
+      <tr><td>SafeFilename</td><td>replace filesystem-reserved characters</td></tr>
+      <tr><td>EmailAliasStrip</td><td>remove +alias and lowercase</td></tr>
+      <tr><td>PhoneE164Sanitizer</td><td>normalize phone numbers to E.164</td></tr>
+      <tr><td>UuidNormalize</td><td>lowercase and validate UUIDs</td></tr>
+      <tr><td>CreditCardMask</td><td>mask all but the last four digits</td></tr>
+      <tr><td>SSNMaskSanitizer</td><td>mask US SSN, reveal last four</td></tr>
+      <tr><td>IBANMaskSanitizer</td><td>mask IBAN, reveal last four</td></tr>
+      <tr><td>TruncateSanitizer</td><td>configurable truncation with optional suffix</td></tr>
+    </table>
+  </section>
+
+  <section id="custom">
+    <h2>extending</h2>
+    <p>Implement <code>FieldSanitizer&lt;T&gt;</code> for your own logic.</p>
+<pre>@Component
+public class NumericOnlySanitizer implements FieldSanitizer&lt;String&gt; {
+  @Override
+  public String sanitize(String input) {
+    return input == null ? null : input.replaceAll(<span class="tok-k">"[^0-9]"</span>, <span class="tok-k">""</span>);
+  }
+}</pre>
+    <p>Or extend <code>ConfigurableFieldSanitizer</code> if you need parameters.</p>
+  </section>
+
+  <section id="docs">
+    <h2>documentation</h2>
+    <ul class="dash">
+      <li><a href="javadoc/">API Javadoc</a> — full reference for all three modules</li>
+      <li><a href="https://github.com/rabinarayanpatra/sanitizer-lib/blob/master/README.md">README</a> — extended guide and examples</li>
+      <li><a href="https://github.com/rabinarayanpatra/sanitizer-lib/blob/master/CHANGELOG.md">Changelog</a></li>
+      <li><a href="https://central.sonatype.com/namespace/io.github.rabinarayanpatra.sanitizer">Maven Central</a></li>
+    </ul>
+  </section>
+
+  <footer>
+    <span>MIT · © 2026 Rabinarayan Patra</span>
+    <span><a href="https://github.com/rabinarayanpatra/sanitizer-lib">github.com/rabinarayanpatra/sanitizer-lib</a></span>
+  </footer>
+
+</div>
 </body>
 </html>

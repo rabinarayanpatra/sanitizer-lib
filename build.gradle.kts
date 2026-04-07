@@ -1,5 +1,6 @@
 plugins {
     java
+    jacoco
     `maven-publish`
     id("io.spring.dependency-management") version "1.1.7"
     id("com.diffplug.spotless") version "8.4.0"
@@ -92,5 +93,29 @@ subprojects {
             trimTrailingWhitespace()
             endWithNewline()
         }
+    }
+}
+
+// Aggregated JaCoCo coverage report across all subprojects.
+// Run with: ./gradlew test jacocoAggregatedReport
+tasks.register<JacocoReport>("jacocoAggregatedReport") {
+    group = "verification"
+    description = "Aggregates JaCoCo coverage reports from all subprojects."
+
+    dependsOn(subprojects.map { it.tasks.withType<Test>() })
+
+    val reports = subprojects.flatMap { sub ->
+        sub.tasks.withType<JacocoReport>()
+    }
+
+    executionData.setFrom(reports.flatMap { it.executionData.files })
+    sourceDirectories.setFrom(reports.flatMap { it.sourceDirectories.files })
+    classDirectories.setFrom(reports.flatMap { it.classDirectories.files })
+
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+        xml.outputLocation.set(layout.buildDirectory.file("reports/jacoco/aggregated/jacoco.xml"))
+        html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/aggregated/html"))
     }
 }

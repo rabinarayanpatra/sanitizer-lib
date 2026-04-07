@@ -1,5 +1,7 @@
 # Sanitizer-Lib
 
+[![CI](https://github.com/rabinarayanpatra/sanitizer-lib/actions/workflows/ci.yml/badge.svg)](https://github.com/rabinarayanpatra/sanitizer-lib/actions/workflows/ci.yml)
+[![Coverage](https://raw.githubusercontent.com/rabinarayanpatra/sanitizer-lib/master/.github/badges/jacoco.svg)](https://github.com/rabinarayanpatra/sanitizer-lib/actions/workflows/ci.yml)
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.rabinarayanpatra.sanitizer/sanitizer-core.svg)](https://central.sonatype.com/namespace/io.github.rabinarayanpatra.sanitizer)
 [![Javadoc](https://img.shields.io/badge/javadoc-online-blue.svg)](https://rabinarayanpatra.github.io/sanitizer-lib/javadoc/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)

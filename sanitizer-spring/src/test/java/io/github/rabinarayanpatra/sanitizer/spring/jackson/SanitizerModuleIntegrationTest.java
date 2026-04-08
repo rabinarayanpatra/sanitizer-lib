@@ -29,12 +29,45 @@ class SanitizerModuleIntegrationTest {
 		assertEquals("user@example.com", dto.getEmail());
 	}
 
+	@Test
+	void jsonDeserialization_appliesSanitizerToNestedBeans() throws Exception {
+		// Nested beans force Jackson to contextualize the delegate for each property,
+		// which exercises SanitizingDeserializer#newDelegatingInstance.
+		final String json = "{\"outer\":\"  OUTER  \",\"nested\":{\"email\":\"  USER@EXAMPLE.COM  \"}}";
+		final WrapperDto dto = mapper.readValue(json, WrapperDto.class);
+		assertEquals("outer", dto.getOuter());
+		assertEquals("user@example.com", dto.getNested().getEmail());
+	}
+
 	@Configuration
 	@EnableAutoConfiguration
 	@ComponentScan(basePackages = "io.github.rabinarayanpatra.sanitizer")
 	static class TestConfig {
 		// Enables auto-config + picks up our @Component sanitizers,
 		// the Jackson module via spring.factories, and the core classes.
+	}
+
+	static class WrapperDto {
+		@Sanitize(using = {TrimSanitizer.class, LowerCaseSanitizer.class})
+		private String outer;
+
+		private SampleDto nested;
+
+		public String getOuter() {
+			return outer;
+		}
+
+		public void setOuter(final String outer) {
+			this.outer = outer;
+		}
+
+		public SampleDto getNested() {
+			return nested;
+		}
+
+		public void setNested(final SampleDto nested) {
+			this.nested = nested;
+		}
 	}
 
 	static class SampleDto {

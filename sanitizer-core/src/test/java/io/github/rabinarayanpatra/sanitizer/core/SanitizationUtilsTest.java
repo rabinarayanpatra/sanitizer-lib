@@ -2,11 +2,15 @@ package io.github.rabinarayanpatra.sanitizer.core;
 
 import org.junit.jupiter.api.Test;
 
+import org.jspecify.annotations.Nullable;
+
 import io.github.rabinarayanpatra.sanitizer.annotation.Sanitize;
 import io.github.rabinarayanpatra.sanitizer.builtin.LowerCaseSanitizer;
 import io.github.rabinarayanpatra.sanitizer.builtin.TrimSanitizer;
+import io.github.rabinarayanpatra.sanitizer.builtin.TruncateSanitizer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -91,6 +95,34 @@ class SanitizationUtilsTest {
 		assertTrue(ex.getCause() instanceof ClassCastException);
 	}
 
+	@Test
+	void apply_writesBackWhenSanitizerReturnsNonNullForNullInput() {
+		final DefaultingBean bean = new DefaultingBean();
+		bean.value = null;
+		SanitizationUtils.apply(bean);
+		assertEquals("DEFAULT", bean.value);
+	}
+
+	@Test
+	void apply_configurableSanitizerWithBlankParamsSkipsConfigure() {
+		// Covers the `!ann.params().isBlank()` false side of the compound branch.
+		final BlankParamsBean bean = new BlankParamsBean();
+		bean.text = "hello";
+		SanitizationUtils.apply(bean);
+		// Default maxLength (255) applies → input unchanged.
+		assertEquals("hello", bean.text);
+	}
+
+	@Test
+	void apply_throwsInstantiationExceptionForPrivateConstructorSanitizer() {
+		final PrivateCtorBean bean = new PrivateCtorBean();
+		bean.value = "x";
+		final SanitizerInstantiationException ex = assertThrows(SanitizerInstantiationException.class,
+				() -> SanitizationUtils.apply(bean));
+		assertTrue(ex.getMessage().contains("Cannot instantiate sanitizer"));
+		assertNotNull(ex.getCause());
+	}
+
 	// --- Test fixtures ---
 
 	static class MutableBean {
@@ -125,5 +157,42 @@ class SanitizationUtilsTest {
 	}
 
 	record ImmutableRecord(@Sanitize(using = TrimSanitizer.class) String name) {
+	}
+
+	static class DefaultingBean {
+		@Sanitize(using = DefaultingSanitizer.class)
+		String value;
+	}
+
+	public static class DefaultingSanitizer implements FieldSanitizer<String> {
+		public DefaultingSanitizer() {
+		}
+
+		@Override
+		public @Nullable String sanitize(final @Nullable String input) {
+			return input == null ? "DEFAULT" : input;
+		}
+	}
+
+	static class BlankParamsBean {
+		@Sanitize(using = TruncateSanitizer.class, params = "")
+		String text;
+	}
+
+	static class PrivateCtorBean {
+		@Sanitize(using = PrivateCtorSanitizer.class)
+		String value;
+	}
+
+	public static class PrivateCtorSanitizer implements FieldSanitizer<String> {
+		// No no-arg constructor → ReflectiveOperationException during instantiation.
+		@SuppressWarnings("UnusedMethod")
+		public PrivateCtorSanitizer(final String unused) {
+		}
+
+		@Override
+		public @Nullable String sanitize(final @Nullable String input) {
+			return input;
+		}
 	}
 }

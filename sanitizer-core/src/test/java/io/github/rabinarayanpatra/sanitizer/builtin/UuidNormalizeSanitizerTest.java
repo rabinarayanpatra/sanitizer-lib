@@ -36,4 +36,15 @@ class UuidNormalizeSanitizerTest {
 	void sanitize_invalidUuidFallsBackToLowercase() {
 		assertEquals("not-a-uuid", sanitizer.sanitize("NOT-A-UUID"));
 	}
+
+	@Test
+	void sanitize_leadingBraceOnlyIsNotStripped() {
+		// Only one side of the `startsWith("{") && endsWith("}")` branch.
+		assertEquals("{abc", sanitizer.sanitize("{ABC"));
+	}
+
+	@Test
+	void sanitize_trailingBraceOnlyIsNotStripped() {
+		assertEquals("abc}", sanitizer.sanitize("ABC}"));
+	}
 }

@@ -50,7 +50,7 @@ subprojects {
 
     dependencies {
         testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-        "errorprone"("com.google.errorprone:error_prone_core:2.36.0")
+        "errorprone"("com.google.errorprone:error_prone_core:2.49.0")
         "api"("org.jspecify:jspecify:1.0.0")
     }
 

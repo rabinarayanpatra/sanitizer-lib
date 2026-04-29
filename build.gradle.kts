@@ -32,7 +32,7 @@ subprojects {
 
     dependencyManagement {
         imports {
-            mavenBom("org.springframework.boot:spring-boot-dependencies:3.4.5")
+            mavenBom("org.springframework.boot:spring-boot-dependencies:4.0.6")
         }
     }
 

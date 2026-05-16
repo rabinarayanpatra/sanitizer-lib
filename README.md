@@ -24,6 +24,7 @@ Sanitizer-Lib is an enterprise-grade input sanitization framework for Java appli
 | `LowerCaseSanitizer` | Normalizes text to lowercase |
 | `UpperCaseSanitizer` | Normalizes text to uppercase |
 | `TitleCaseSanitizer` | Capitalizes the first character of each word |
+| `SentenceCaseSanitizer` | Capitalizes only the first character, lowercases the rest |
 | `CollapseWhitespaceSanitizer` | Trims and collapses internal whitespace to a single space |
 | `CreditCardMaskSanitizer` | Secures card numbers by displaying only the last four digits |
 | `SSNMaskSanitizer` | Masks U.S. SSN, revealing only the last four digits |

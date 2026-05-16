@@ -9,11 +9,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 ### Added
 - **Configurable sanitizers** — `ConfigurableFieldSanitizer<T>` base class with `params` attribute on `@Sanitize` for key-value configuration
 - `TruncateSanitizer` — configurable string truncation with optional suffix (`maxLength`, `suffix` params)
+- `SentenceCaseSanitizer` - capitalizes only the first character and lowercases the rest
 - `RemoveNonPrintableSanitizer` bean registered in Spring autoconfiguration (was missing)
 - Java records detection — throws `UnsupportedOperationException` with clear guidance instead of silent failure
 - GitHub Actions workflow for publishing Javadoc to GitHub Pages on release
 - Dependabot configuration for automated Gradle and GitHub Actions dependency updates
-- README now lists all 17 built-in sanitizers with descriptions
+- README now lists all 18 built-in sanitizers with descriptions
 - README section documenting configurable sanitizer usage
 
 ### Changed

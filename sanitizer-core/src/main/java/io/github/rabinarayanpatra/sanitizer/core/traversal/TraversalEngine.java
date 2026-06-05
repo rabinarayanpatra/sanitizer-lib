@@ -11,8 +11,8 @@ import io.github.rabinarayanpatra.sanitizer.core.TraversalSafetyChecker;
 
 /**
  * Recursive walker that applies sanitizers and (optionally) descends into a
- * bean's object graph. Entry point:
- * {@link #walk(Object, TraversalState, TraversalSafetyChecker)}.
+ * bean's object graph. Public entry point:
+ * {@link #walk(Object, TraversalSafetyChecker)}.
  */
 public final class TraversalEngine {
 
@@ -21,7 +21,11 @@ public final class TraversalEngine {
 	private TraversalEngine() {
 	}
 
-	public static @Nullable Object walk(final @Nullable Object node, final TraversalState state,
+	public static @Nullable Object walk(final @Nullable Object node, final TraversalSafetyChecker checker) {
+		return walk(node, new TraversalState(), checker);
+	}
+
+	static @Nullable Object walk(final @Nullable Object node, final TraversalState state,
 			final TraversalSafetyChecker checker) {
 		if (node == null) {
 			return null;

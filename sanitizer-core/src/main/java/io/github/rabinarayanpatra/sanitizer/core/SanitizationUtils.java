@@ -4,7 +4,6 @@ import org.jspecify.annotations.Nullable;
 
 import io.github.rabinarayanpatra.sanitizer.annotation.Sanitize;
 import io.github.rabinarayanpatra.sanitizer.core.traversal.TraversalEngine;
-import io.github.rabinarayanpatra.sanitizer.core.traversal.TraversalState;
 
 /**
  * Public facade for applying {@link Sanitize} annotations to bean fields. All
@@ -37,6 +36,6 @@ public final class SanitizationUtils {
 			throw new IllegalArgumentException("apply(Object) discards return value but record requires reassignment. "
 					+ "Use applyAndReturn(T) for record type " + bean.getClass().getName() + ".");
 		}
-		TraversalEngine.walk(bean, new TraversalState(), TraversalSafetyChecker.ALWAYS);
+		TraversalEngine.walk(bean, TraversalSafetyChecker.ALWAYS);
 	}
 }

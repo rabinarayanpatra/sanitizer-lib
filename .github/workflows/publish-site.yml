@@ -45,7 +45,7 @@ jobs:
         run: |
           mkdir -p site/javadoc
           cp docs/index.html site/index.html
-          for module in sanitizer-core sanitizer-spring sanitizer-jpa; do
+          for module in sanitizer-core sanitizer-spring sanitizer-jpa sanitizer-jpa-spring; do
             if [ -d "$module/build/docs/javadoc" ]; then
               cp -r "$module/build/docs/javadoc" "site/javadoc/$module"
             fi
@@ -72,6 +72,7 @@ jobs:
               <li><a href="sanitizer-core/">sanitizer-core</a> — Core API &amp; Built-in Sanitizers</li>
               <li><a href="sanitizer-spring/">sanitizer-spring</a> — Spring Boot Integration</li>
               <li><a href="sanitizer-jpa/">sanitizer-jpa</a> — JPA Integration</li>
+              <li><a href="sanitizer-jpa-spring/">sanitizer-jpa-spring</a> — Spring Boot starter wiring Hibernate-aware safety checks into the JPA entity listener</li>
             </ul>
           </body>
           </html>

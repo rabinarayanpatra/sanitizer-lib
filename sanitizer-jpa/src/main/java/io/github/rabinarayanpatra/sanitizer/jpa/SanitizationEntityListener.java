@@ -1,58 +1,43 @@
 package io.github.rabinarayanpatra.sanitizer.jpa;
 
-import io.github.rabinarayanpatra.sanitizer.annotation.Sanitize;
-import io.github.rabinarayanpatra.sanitizer.core.SanitizationUtils;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 
+import io.github.rabinarayanpatra.sanitizer.core.SanitizationUtils;
+import io.github.rabinarayanpatra.sanitizer.core.TraversalSafetyChecker;
+
 /**
- * JPA entity listener that automatically applies sanitization to any entity
- * fields annotated with {@link Sanitize @Sanitize} before they are persisted or
- * updated.
+ * JPA entity listener that applies sanitizers before persist and before update.
+ * Wire it up by annotating an entity (or a {@code @MappedSuperclass}) with
+ * {@code @EntityListeners(SanitizationEntityListener.class)}.
+ *
  * <p>
- * Internally this listener invokes {@link SanitizationUtils#apply(Object)} to
- * run through all configured
- * {@link io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer}s.
- *
- * <pre>
- * {
- * 	&#64;code
- * 	&#64;Entity
- * 	&#64;EntityListeners(SanitizationEntityListener.class)
- * 	public class Customer {
- *
- * 		&#64;Sanitize(using = TrimSanitizer.class)
- * 		&#64;Sanitize(using = CollapseWhitespaceSanitizer.class)
- * 		private String name;
- *
- * 		// getters/setters...
- * 	}
- * }
- * </pre>
+ * In a Spring + Hibernate context, the listener is instantiated by Hibernate.
+ * Use the {@code sanitizer-jpa-spring} starter to wire a Hibernate-aware
+ * {@link TraversalSafetyChecker} that skips lazy associations.
  *
  * @since 1.0.0
  */
 public class SanitizationEntityListener {
 
-	/**
-	 * Default constructor.
-	 */
-	public SanitizationEntityListener() {
-	}
+	private TraversalSafetyChecker safetyChecker = TraversalSafetyChecker.ALWAYS;
 
 	/**
-	 * Lifecycle callback invoked by JPA before an entity is inserted or updated.
-	 * <p>
-	 * Calls {@link SanitizationUtils#apply(Object)} on the given entity instance,
-	 * sanitizing any fields marked with {@link Sanitize @Sanitize}.
+	 * Overrides the default {@link TraversalSafetyChecker#ALWAYS} checker. Spring
+	 * auto-configuration in {@code sanitizer-jpa-spring} calls this with a
+	 * Hibernate-aware implementation.
 	 *
-	 * @param entity
-	 *            the entity instance about to be persisted or updated; never
-	 *            {@code null}
+	 * @param safetyChecker
+	 *            the checker to use for all subsequent {@link #onSave(Object)}
+	 *            invocations; must not be null
 	 */
+	public void setSafetyChecker(final TraversalSafetyChecker safetyChecker) {
+		this.safetyChecker = safetyChecker;
+	}
+
 	@PrePersist
 	@PreUpdate
 	public void onSave(final Object entity) {
-		SanitizationUtils.apply(entity);
+		SanitizationUtils.applyAndReturn(entity, safetyChecker);
 	}
 }

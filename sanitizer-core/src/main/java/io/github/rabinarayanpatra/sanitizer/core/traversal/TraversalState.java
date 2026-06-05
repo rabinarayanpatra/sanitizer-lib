@@ -9,10 +9,13 @@ import org.jspecify.annotations.Nullable;
  * for cycle detection and reconstructed record instances keyed by their
  * original references.
  */
-final class TraversalState {
+public final class TraversalState {
 
 	private final IdentityHashMap<Object, Boolean> visited = new IdentityHashMap<>();
 	private final IdentityHashMap<Object, Object> reconstructedRecords = new IdentityHashMap<>();
+
+	public TraversalState() {
+	}
 
 	/**
 	 * @return true the first time this node is visited; false on every subsequent

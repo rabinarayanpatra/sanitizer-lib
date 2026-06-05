@@ -110,11 +110,16 @@ final class ClassMetadata {
 		final Sanitize[] anns = readRecordComponentAnnotations(owner, rc);
 		final List<FieldSanitizer<Object>> chain = buildChain(anns);
 		final boolean cascade = anyCascade(anns);
-		validateMeaningful(owner, rc.getName(), chain, cascade);
 		final Class<?> declared = rc.getType();
 		final Kind kind = resolveKind(declared);
-		validateCascadeKind(owner, rc.getName(), kind, cascade);
 		final Class<?> elementType = resolveElementType(rc.getGenericType(), kind);
+		if (anns.length == 0) {
+			// Unannotated record components produce pass-through descriptors so
+			// canonical-constructor reconstruction can still copy the raw value.
+			return FieldDescriptor.forRecordComponent(rc, chain, cascade, kind, elementType);
+		}
+		validateMeaningful(owner, rc.getName(), chain, cascade);
+		validateCascadeKind(owner, rc.getName(), kind, cascade);
 		return FieldDescriptor.forRecordComponent(rc, chain, cascade, kind, elementType);
 	}
 

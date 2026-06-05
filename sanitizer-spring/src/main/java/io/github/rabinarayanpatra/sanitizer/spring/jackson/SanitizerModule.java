@@ -19,9 +19,11 @@ import io.github.rabinarayanpatra.sanitizer.core.SanitizationUtils;
  * during JSON deserialization.
  * <p>
  * This module wraps default bean deserializers and invokes
- * {@link SanitizationUtils#apply(Object)} immediately after a bean is fully
- * deserialized, ensuring field sanitization happens automatically for incoming
- * JSON.
+ * {@link SanitizationUtils#applyAndReturn(Object)} immediately after a bean is
+ * fully deserialized. For mutable POJOs the same instance is returned with
+ * fields mutated in place; for records the engine reconstructs a new instance
+ * with sanitized components and returns it in place of the raw deserialized
+ * record.
  *
  * @since 1.0.0
  */
@@ -69,8 +71,7 @@ public final class SanitizerModule extends SimpleModule {
 		@Override
 		public Object deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
 			final Object bean = super.deserialize(p, ctxt);
-			SanitizationUtils.apply(bean);
-			return bean;
+			return SanitizationUtils.applyAndReturn(bean);
 		}
 
 		/**

@@ -101,6 +101,10 @@ final class ClassMetadata {
 		}
 		final List<FieldDescriptor> descriptors = new ArrayList<>(components.length);
 		for (final RecordComponent rc : components) {
+			// Records declared in another module/package require setAccessible on
+			// their synthetic accessors so reflective invocation succeeds from the
+			// engine's package.
+			rc.getAccessor().setAccessible(true);
 			descriptors.add(describeRecordComponent(cls, rc));
 		}
 		return new ClassMetadata(cls, true, canonical, components, descriptors);

@@ -40,18 +40,19 @@ public final class TraversalEngine {
 			if (cached != null) {
 				return cached;
 			}
-			final Object built = walkRecord(node, meta);
+			final Object built = walkRecord(node, meta, state, checker);
 			state.storeReconstructed(node, built);
 			return built;
 		}
 		if (!state.markVisited(node)) {
 			return node;
 		}
-		walkPojo(node, meta);
+		walkPojo(node, meta, state, checker);
 		return node;
 	}
 
-	private static Object walkRecord(final Object node, final ClassMetadata meta) {
+	private static Object walkRecord(final Object node, final ClassMetadata meta, final TraversalState state,
+			final TraversalSafetyChecker checker) {
 		LOG.debug("walk record class={} components={}", node.getClass().getName(), meta.fields().size());
 		final RecordComponent[] components = meta.components();
 		final Object[] args = new Object[components.length];
@@ -60,7 +61,11 @@ public final class TraversalEngine {
 			final FieldDescriptor d = meta.fields().get(i);
 			try {
 				final Object raw = rc.getAccessor().invoke(node);
-				args[i] = applyChain(raw, d.chain());
+				Object current = applyChain(raw, d.chain());
+				if (d.cascade() && current != null) {
+					current = descendByKind(current, d, state, checker);
+				}
+				args[i] = current;
 			} catch (final IllegalAccessException e) {
 				throw new IllegalStateException(
 						"Cannot invoke accessor for component '" + rc.getName() + "' on " + node.getClass().getName(),
@@ -82,7 +87,8 @@ public final class TraversalEngine {
 		}
 	}
 
-	private static void walkPojo(final Object node, final ClassMetadata meta) {
+	private static void walkPojo(final Object node, final ClassMetadata meta, final TraversalState state,
+			final TraversalSafetyChecker checker) {
 		LOG.debug("walk pojo class={} fields={}", node.getClass().getName(), meta.fields().size());
 		for (final FieldDescriptor d : meta.fields()) {
 			final Field field = d.field();
@@ -93,6 +99,12 @@ public final class TraversalEngine {
 				final Object raw = field.get(node);
 				final Object sanitized = applyChain(raw, d.chain());
 				writeBackIfChanged(node, field, raw, sanitized);
+				if (d.cascade() && sanitized != null && checker.shouldDescend(node, field)) {
+					final Object after = descendByKind(sanitized, d, state, checker);
+					if (after != sanitized) {
+						field.set(node, after);
+					}
+				}
 			} catch (final IllegalAccessException e) {
 				throw new IllegalStateException("Cannot access field '" + field.getName() + "' on "
 						+ node.getClass().getName() + ". Ensure the field is mutable and accessible.", e);
@@ -103,6 +115,28 @@ public final class TraversalEngine {
 						e);
 			}
 		}
+	}
+
+	private static Object descendByKind(final Object child, final FieldDescriptor d, final TraversalState state,
+			final TraversalSafetyChecker checker) {
+		switch (d.kind()) {
+			case POJO -> {
+				walk(child, state, checker);
+				return child;
+			}
+			case RECORD -> {
+				final Object replaced = walk(child, state, checker);
+				return replaced == null ? child : replaced;
+			}
+			case COLLECTION, MAP -> {
+				// Implemented in Tasks 11 and 12.
+				LOG.warn("cascade into {} not yet implemented; skipping", d.kind());
+				return child;
+			}
+			case LEAF -> throw new IllegalStateException("Internal error: cascade descent reached LEAF for "
+					+ (d.field() != null ? d.field().getName() : d.recordComponent().getName()));
+		}
+		return child;
 	}
 
 	private static @Nullable Object applyChain(final @Nullable Object raw, final List<FieldSanitizer<Object>> chain) {

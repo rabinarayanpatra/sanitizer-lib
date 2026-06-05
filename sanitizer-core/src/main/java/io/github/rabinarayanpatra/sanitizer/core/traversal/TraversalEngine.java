@@ -61,6 +61,15 @@ public final class TraversalEngine {
 			final FieldDescriptor d = meta.fields().get(i);
 			try {
 				final Object raw = rc.getAccessor().invoke(node);
+				if (d.kind() == Kind.COLLECTION || d.kind() == Kind.MAP) {
+					// For collections/maps the chain applies per-element, not to the
+					// container itself. Descend when cascade=true OR when a leaf chain
+					// is present (implicit leaf-element walk).
+					args[i] = (raw != null && (d.cascade() || !d.chain().isEmpty()))
+							? descendByKind(raw, d, state, checker)
+							: raw;
+					continue;
+				}
 				Object current = applyChain(raw, d.chain());
 				if (d.cascade() && current != null) {
 					current = descendByKind(current, d, state, checker);
@@ -96,6 +105,22 @@ public final class TraversalEngine {
 				continue;
 			}
 			try {
+				if (d.kind() == Kind.COLLECTION || d.kind() == Kind.MAP) {
+					// For collections/maps the chain applies per-element, not to the
+					// container itself. Descend when cascade=true OR when a leaf chain
+					// is present (implicit leaf-element walk).
+					final Object raw = field.get(node);
+					if (raw == null) {
+						continue;
+					}
+					if ((d.cascade() || !d.chain().isEmpty()) && checker.shouldDescend(node, field)) {
+						final Object after = descendByKind(raw, d, state, checker);
+						if (after != raw) {
+							field.set(node, after);
+						}
+					}
+					continue;
+				}
 				final Object raw = field.get(node);
 				final Object sanitized = applyChain(raw, d.chain());
 				writeBackIfChanged(node, field, raw, sanitized);
@@ -128,9 +153,13 @@ public final class TraversalEngine {
 				final Object replaced = walk(child, state, checker);
 				return replaced == null ? child : replaced;
 			}
-			case COLLECTION, MAP -> {
-				// Implemented in Tasks 11 and 12.
-				LOG.warn("cascade into {} not yet implemented; skipping", d.kind());
+			case COLLECTION -> {
+				return CollectionWalker.walk((java.util.Collection<?>) child, d.elementType(), d.chain(), state,
+						checker);
+			}
+			case MAP -> {
+				// Implemented in the next task.
+				LOG.warn("cascade into MAP not yet implemented; skipping");
 				return child;
 			}
 			case LEAF -> throw new IllegalStateException("Internal error: cascade descent reached LEAF for "

@@ -19,4 +19,19 @@ public interface FieldSanitizer<T> {
 	 */
 	@Nullable
 	T sanitize(@Nullable T input);
+
+	/**
+	 * Returns this sanitizer typed as {@code FieldSanitizer<Object>}. The cast is
+	 * safe at runtime because the traversal engine routes each sanitizer only to
+	 * fields whose declared type matches the sanitizer's generic parameter; a
+	 * {@code ClassCastException} thrown by {@code sanitize} is caught and rewrapped
+	 * with a descriptive {@code IllegalStateException} by the engine.
+	 *
+	 * @return this sanitizer as an Object-typed sanitizer
+	 * @since 1.2.0
+	 */
+	@SuppressWarnings("unchecked")
+	default FieldSanitizer<Object> asObjectSanitizer() {
+		return (FieldSanitizer<Object>) this;
+	}
 }

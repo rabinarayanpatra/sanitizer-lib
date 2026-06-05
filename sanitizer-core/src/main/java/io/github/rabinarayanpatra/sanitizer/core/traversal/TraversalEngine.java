@@ -158,9 +158,7 @@ public final class TraversalEngine {
 						checker);
 			}
 			case MAP -> {
-				// Implemented in the next task.
-				LOG.warn("cascade into MAP not yet implemented; skipping");
-				return child;
+				return MapWalker.walk((java.util.Map<?, ?>) child, d.elementType(), d.chain(), state, checker);
 			}
 			case LEAF -> throw new IllegalStateException("Internal error: cascade descent reached LEAF for "
 					+ (d.field() != null ? d.field().getName() : d.recordComponent().getName()));

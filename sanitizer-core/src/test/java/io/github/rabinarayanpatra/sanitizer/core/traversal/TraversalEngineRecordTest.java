@@ -1,5 +1,10 @@
 package io.github.rabinarayanpatra.sanitizer.core.traversal;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.jupiter.api.Test;
 
 import io.github.rabinarayanpatra.sanitizer.annotation.Sanitize;
@@ -64,6 +69,75 @@ class TraversalEngineRecordTest {
 		assertEquals("  HELLO  ", input.value());
 	}
 
+	@Test
+	void canonicalCtorRuntimeExceptionAfterSanitizationIsRethrown() {
+		// Sanitizer turns input into null; compact ctor rejects null. This
+		// exercises the InvocationTargetException catch on the canonical
+		// constructor call and the RuntimeException branch of rethrowRuntime.
+		final RuntimeException ex = assertThrows(RuntimeException.class,
+				() -> SanitizationUtils.applyAndReturn(new NullRejecting("blank-makes-me-null")));
+		assertTrue(ex instanceof IllegalStateException || ex.getMessage().contains("rejected null"));
+	}
+
+	@Test
+	void canonicalCtorErrorWrappedAsIllegalStateException() {
+		// Throw a non-RuntimeException Throwable (Error) from compact ctor body
+		// only on reconstruction, so we can build the original then trigger the
+		// fallback branch in rethrowRuntime where the cause is not a
+		// RuntimeException.
+		final ErrorThrower input = new ErrorThrower("anything");
+		ErrorThrower.failNext = true;
+		try {
+			final IllegalStateException ex = assertThrows(IllegalStateException.class,
+					() -> SanitizationUtils.applyAndReturn(input));
+			assertTrue(ex.getMessage().contains("Record canonical constructor"));
+			assertTrue(ex.getCause() instanceof Error);
+		} finally {
+			ErrorThrower.failNext = false;
+		}
+	}
+
+	@Test
+	void recordWithListCollectionCascadesIntoElements() {
+		// Exercises walkRecord's COLLECTION/MAP branch (lines 64-71): the chain
+		// applies per-element and the descended collection is placed into the
+		// reconstructed record.
+		final WithList input = new WithList(new ArrayList<>(List.of("  A  ", "  B  ")));
+		final WithList out = SanitizationUtils.applyAndReturn(input);
+		assertEquals(List.of("a", "b"), out.values());
+	}
+
+	@Test
+	void recordWithMapCollectionCascadesIntoValues() {
+		final LinkedHashMap<String, String> map = new LinkedHashMap<>();
+		map.put("first", "  A  ");
+		map.put("second", "  B  ");
+		final WithMap input = new WithMap(map);
+		final WithMap out = SanitizationUtils.applyAndReturn(input);
+		assertEquals("a", out.byKey().get("first"));
+		assertEquals("b", out.byKey().get("second"));
+	}
+
+	@Test
+	void recordWithNullCollectionComponentLeftAsNull() {
+		// Triggers the (raw != null) false branch of the conditional in the
+		// COLLECTION/MAP branch of walkRecord.
+		final WithList out = SanitizationUtils.applyAndReturn(new WithList(null));
+		assertNull(out.values());
+	}
+
+	@Test
+	void recordChainTypeMismatchProducesIllegalState() {
+		// Trim sanitizer (FieldSanitizer<String>) applied to Integer component:
+		// triggers ClassCastException in applyChain, caught at walkRecord and
+		// rewrapped as IllegalStateException with the component name.
+		final IllegalStateException ex = assertThrows(IllegalStateException.class,
+				() -> SanitizationUtils.applyAndReturn(new MismatchedRecord(42)));
+		assertTrue(ex.getMessage().contains("Type mismatch"));
+		assertTrue(ex.getMessage().contains("count"));
+		assertTrue(ex.getCause() instanceof ClassCastException);
+	}
+
 	record Simple(@Sanitize(using = {
 			TrimSanitizer.class, LowerCaseSanitizer.class}) String value) {
 	}
@@ -78,6 +152,45 @@ class TraversalEngineRecordTest {
 				throw new IllegalArgumentException("value must not be blank");
 			}
 		}
+	}
+
+	public static class NullingSanitizer implements io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer<String> {
+		public NullingSanitizer() {
+		}
+
+		@Override
+		public @org.jspecify.annotations.Nullable String sanitize(
+				final @org.jspecify.annotations.Nullable String input) {
+			return null;
+		}
+	}
+
+	record NullRejecting(@Sanitize(using = NullingSanitizer.class) String value) {
+		public NullRejecting {
+			if (value == null) {
+				throw new IllegalStateException("rejected null in canonical ctor");
+			}
+		}
+	}
+
+	record ErrorThrower(@Sanitize(using = TrimSanitizer.class) String value) {
+		static boolean failNext;
+		public ErrorThrower {
+			if (failNext) {
+				throw new java.io.IOError(new RuntimeException("boom from ctor"));
+			}
+		}
+	}
+
+	record WithList(@Sanitize(using = {
+			TrimSanitizer.class, LowerCaseSanitizer.class}) List<String> values) {
+	}
+
+	record WithMap(@Sanitize(using = {
+			TrimSanitizer.class, LowerCaseSanitizer.class}) Map<String, String> byKey) {
+	}
+
+	record MismatchedRecord(@Sanitize(using = TrimSanitizer.class) Integer count) {
 	}
 
 	static class PojoBean {

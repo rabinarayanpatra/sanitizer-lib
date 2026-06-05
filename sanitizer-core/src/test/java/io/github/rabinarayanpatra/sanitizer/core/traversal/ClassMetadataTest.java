@@ -105,6 +105,34 @@ class ClassMetadataTest {
 		assertNull(d.elementType());
 	}
 
+	@Test
+	void typeReturnsTheBackingClass() {
+		// Covers the trivial accessor that was previously unreferenced.
+		final ClassMetadata meta = ClassMetadata.of(SimpleRecord.class);
+		assertSame(SimpleRecord.class, meta.type());
+	}
+
+	@Test
+	void nestedParameterizedElementResolvesToOuterRaw() {
+		// List<Map<String,String>>: target arg is a ParameterizedType, so
+		// resolveElementType returns the raw type (Map.class).
+		final ClassMetadata meta = ClassMetadata.of(NestedGenericBean.class);
+		final FieldDescriptor d = meta.fields().get(0);
+		assertEquals(Kind.COLLECTION, d.kind());
+		assertSame(Map.class, d.elementType());
+	}
+
+	@Test
+	void wildcardElementResolvesToNullElementType() {
+		// List<? extends SimpleRecord>: the type arg is a WildcardType (neither
+		// Class nor ParameterizedType) so elementType is null and the engine
+		// skips cascading at runtime.
+		final ClassMetadata meta = ClassMetadata.of(WildcardElementBean.class);
+		final FieldDescriptor d = meta.fields().get(0);
+		assertEquals(Kind.COLLECTION, d.kind());
+		assertNull(d.elementType());
+	}
+
 	private static Map<String, FieldDescriptor> byFieldName(final ClassMetadata meta) {
 		final java.util.Map<String, FieldDescriptor> m = new java.util.LinkedHashMap<>();
 		for (final FieldDescriptor d : meta.fields()) {
@@ -181,5 +209,15 @@ class ClassMetadataTest {
 	static class RawCollectionBean {
 		@Sanitize(cascade = true)
 		List raw;
+	}
+
+	static class NestedGenericBean {
+		@Sanitize(cascade = true)
+		List<Map<String, String>> nested;
+	}
+
+	static class WildcardElementBean {
+		@Sanitize(cascade = true)
+		List<? extends SimpleRecord> items;
 	}
 }

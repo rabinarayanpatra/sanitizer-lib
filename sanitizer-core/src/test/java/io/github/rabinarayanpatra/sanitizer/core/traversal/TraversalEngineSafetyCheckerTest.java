@@ -36,6 +36,36 @@ class TraversalEngineSafetyCheckerTest {
 		assertEquals("child", p.child.name);
 	}
 
+	@Test
+	void cascadeFieldWithChainReturningNullSkipsDescent() {
+		// Covers the (sanitized != null) middle clause of walkPojo's cascade
+		// guard: a sanitizer that returns null on a cascade=true POJO field
+		// should write back null and skip descent (no NPE).
+		final NullableHolder b = new NullableHolder();
+		b.child = new Child();
+		b.child.name = "  CHILD  ";
+		SanitizationUtils.applyAndReturn(b, TraversalSafetyChecker.ALWAYS);
+		// child is replaced with null because the chain returned null.
+		org.junit.jupiter.api.Assertions.assertNull(b.child);
+	}
+
+	public static class NullingChildSanitizer
+			implements
+				io.github.rabinarayanpatra.sanitizer.core.FieldSanitizer<Child> {
+		public NullingChildSanitizer() {
+		}
+
+		@Override
+		public @org.jspecify.annotations.Nullable Child sanitize(final @org.jspecify.annotations.Nullable Child input) {
+			return null;
+		}
+	}
+
+	static class NullableHolder {
+		@Sanitize(using = NullingChildSanitizer.class, cascade = true)
+		Child child;
+	}
+
 	static class Parent {
 		@Sanitize(using = {TrimSanitizer.class, LowerCaseSanitizer.class})
 		String name;

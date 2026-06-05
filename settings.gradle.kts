@@ -1,2 +1,2 @@
 rootProject.name = "sanitizer-lib"
-include("sanitizer-core", "sanitizer-spring", "sanitizer-jpa")
+include("sanitizer-core", "sanitizer-spring", "sanitizer-jpa", "sanitizer-jpa-spring")

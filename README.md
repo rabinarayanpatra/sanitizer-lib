@@ -51,6 +51,9 @@ Sanitizer-Lib is an enterprise-grade input sanitization framework for Java appli
   - `SanitizationEntityListener` automatically invoked during `@PrePersist` and `@PreUpdate` lifecycle events
   - Seamless integration with existing entity models
 
+- **JPA + Spring Boot starter** (`sanitizer-jpa-spring`)
+  - Spring Boot starter wiring Hibernate-aware safety checks into the JPA entity listener (skips lazy associations)
+
 ### Architecture
 
 The library follows a modular design with clear separation of concerns:
@@ -60,6 +63,7 @@ The library follows a modular design with clear separation of concerns:
 | **sanitizer-core** | Core API, annotations, utilities, and standard sanitizers |
 | **sanitizer-spring** | Spring Boot integration with autoconfiguration support |
 | **sanitizer-jpa** | JPA entity lifecycle integration |
+| **sanitizer-jpa-spring** | Spring Boot starter wiring Hibernate-aware safety checks into the JPA entity listener (skips lazy associations) |
 
 ## Technical Requirements
 
@@ -77,13 +81,13 @@ The library follows a modular design with clear separation of concerns:
 <dependency>
     <groupId>io.github.rabinarayanpatra.sanitizer</groupId>
     <artifactId>sanitizer-spring</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
 </dependency>
 ```
 
 **Gradle (Kotlin DSL):**
 ```kotlin
-implementation("io.github.rabinarayanpatra.sanitizer:sanitizer-spring:1.1.0")
+implementation("io.github.rabinarayanpatra.sanitizer:sanitizer-spring:1.2.0")
 ```
 
 #### JPA Integration (Optional)
@@ -92,13 +96,30 @@ implementation("io.github.rabinarayanpatra.sanitizer:sanitizer-spring:1.1.0")
 <dependency>
     <groupId>io.github.rabinarayanpatra.sanitizer</groupId>
     <artifactId>sanitizer-jpa</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
 </dependency>
 ```
 
 **Gradle (Kotlin DSL):**
 ```kotlin
-implementation("io.github.rabinarayanpatra.sanitizer:sanitizer-jpa:1.1.0")
+implementation("io.github.rabinarayanpatra.sanitizer:sanitizer-jpa:1.2.0")
+```
+
+#### JPA + Spring Boot Starter (Optional)
+
+Spring Boot starter wiring Hibernate-aware safety checks into the JPA entity listener (skips lazy associations).
+
+```xml
+<dependency>
+    <groupId>io.github.rabinarayanpatra.sanitizer</groupId>
+    <artifactId>sanitizer-jpa-spring</artifactId>
+    <version>1.2.0</version>
+</dependency>
+```
+
+**Gradle (Kotlin DSL):**
+```kotlin
+implementation("io.github.rabinarayanpatra.sanitizer:sanitizer-jpa-spring:1.2.0")
 ```
 
 ## Implementation Examples
@@ -174,6 +195,26 @@ public class MaskSanitizer extends ConfigurableFieldSanitizer<String> {
 
 Usage: `@Sanitize(using = MaskSanitizer.class, params = "reveal=6,character=X")`
 
+## Recursive sanitization (1.2.0+)
+
+Opt in to recursive traversal of nested objects, records, collections, and maps with `@Sanitize(cascade = true)`. Java records require a different entry point because they are immutable: `SanitizationUtils.applyAndReturn(T)` returns a new instance with sanitized component values.
+
+```java
+record OrderDto(
+        @Sanitize(using = TrimSanitizer.class) String reference,
+        @Sanitize(cascade = true) CustomerDto customer,
+        @Sanitize(cascade = true) List<LineItem> items) {}
+
+// Records: must use applyAndReturn — it returns a new instance.
+OrderDto sanitized = SanitizationUtils.applyAndReturn(rawOrder);
+
+// POJOs: apply mutates in place; applyAndReturn also works and returns
+// the same reference.
+SanitizationUtils.apply(somePojo);
+```
+
+Cascade is strictly opt-in in v1.2.0. The default flips on in v2.0.0 alongside a new `@SanitizeIgnore` opt-out.
+
 ## Extending the Framework
 
 ### Custom Sanitizer Implementation
@@ -219,7 +260,8 @@ public String processInput(String rawPhoneNumber) {
 sanitizer-lib/             ← Parent project (packaging=pom)
 ├── sanitizer-core/        ← Core API and standard implementations
 ├── sanitizer-spring/      ← Spring Boot integration components
-└── sanitizer-jpa/         ← JPA persistence integration
+├── sanitizer-jpa/         ← JPA persistence integration
+└── sanitizer-jpa-spring/  ← Spring Boot starter wiring Hibernate-aware safety checks into the JPA entity listener
 ```
 
 Each module maintains its own dependency set while inheriting common configuration from the parent build script.

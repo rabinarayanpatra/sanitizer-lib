@@ -205,7 +205,7 @@
 
   <header>
     <div class="topline">
-      <span>sanitizer-lib · v1.1.0</span>
+      <span>sanitizer-lib · v1.2.0</span>
       <div class="links">
         <a href="javadoc/">javadoc</a>
         <a href="https://github.com/rabinarayanpatra/sanitizer-lib">github</a>
@@ -232,16 +232,19 @@
 
     <div class="install-label">build.gradle.kts</div>
 <pre><span class="tok-c">// Spring Boot</span>
-implementation(<span class="tok-k">"io.github.rabinarayanpatra.sanitizer:sanitizer-spring:1.1.0"</span>)
+implementation(<span class="tok-k">"io.github.rabinarayanpatra.sanitizer:sanitizer-spring:1.2.0"</span>)
 
 <span class="tok-c">// JPA (optional)</span>
-implementation(<span class="tok-k">"io.github.rabinarayanpatra.sanitizer:sanitizer-jpa:1.1.0"</span>)</pre>
+implementation(<span class="tok-k">"io.github.rabinarayanpatra.sanitizer:sanitizer-jpa:1.2.0"</span>)
+
+<span class="tok-c">// JPA + Spring Boot starter (Hibernate-aware safety checks)</span>
+implementation(<span class="tok-k">"io.github.rabinarayanpatra.sanitizer:sanitizer-jpa-spring:1.2.0"</span>)</pre>
 
     <div class="install-label">pom.xml</div>
 <pre>&lt;dependency&gt;
   &lt;groupId&gt;io.github.rabinarayanpatra.sanitizer&lt;/groupId&gt;
   &lt;artifactId&gt;sanitizer-spring&lt;/artifactId&gt;
-  &lt;version&gt;1.1.0&lt;/version&gt;
+  &lt;version&gt;1.2.0&lt;/version&gt;
 &lt;/dependency&gt;</pre>
   </section>
 
@@ -281,7 +284,7 @@ public class Payment {
       <li><b>Composable.</b> Chain sanitizers in any order. Mix built-ins with your own.</li>
       <li><b>Framework-aware.</b> Hooks into Jackson for DTOs and JPA listeners for entities — no manual calls.</li>
       <li><b>Configurable.</b> Pass parameters via <code>params="maxLength=100,suffix=..."</code>.</li>
-      <li><b>Modular.</b> <code>sanitizer-core</code> stands alone. Add <code>-spring</code> or <code>-jpa</code> only if you need them.</li>
+      <li><b>Modular.</b> <code>sanitizer-core</code> stands alone. Add <code>-spring</code>, <code>-jpa</code>, or <code>-jpa-spring</code> only if you need them.</li>
     </ul>
   </section>
 
@@ -324,7 +327,7 @@ public class NumericOnlySanitizer implements FieldSanitizer&lt;String&gt; {
   <section id="docs">
     <h2>documentation</h2>
     <ul class="dash">
-      <li><a href="javadoc/">API Javadoc</a> — full reference for all three modules</li>
+      <li><a href="javadoc/">API Javadoc</a> — full reference for sanitizer-core, sanitizer-spring, sanitizer-jpa, sanitizer-jpa-spring</li>
       <li><a href="https://github.com/rabinarayanpatra/sanitizer-lib/blob/master/README.md">README</a> — extended guide and examples</li>
       <li><a href="https://github.com/rabinarayanpatra/sanitizer-lib/blob/master/CHANGELOG.md">Changelog</a></li>
       <li><a href="https://central.sonatype.com/namespace/io.github.rabinarayanpatra.sanitizer">Maven Central</a></li>

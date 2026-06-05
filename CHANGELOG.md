@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.2.0] - 2026-06-06
+
+### Added
+- Java records support via new `SanitizationUtils.applyAndReturn(T)` entry point.
+- Opt-in recursive traversal via `@Sanitize(cascade = true)` for nested objects, records, collections, and maps.
+- `TraversalSafetyChecker` interface for pluggable graph-walk gating.
+- New `sanitizer-jpa-spring` module providing `HibernateSafetyChecker` that skips non-initialized lazy JPA associations.
+- SLF4J logging in the traversal engine at DEBUG/TRACE levels.
+
+### Changed
+- `@Sanitize.using()` now defaults to `{}` so a field can opt in to cascade without supplying a self-sanitizer.
+- `SanitizationUtils.apply(record)` throws `IllegalArgumentException` (was `UnsupportedOperationException`) and recommends `applyAndReturn`.
+
+### Compatibility
+- All existing POJO behavior is bit-identical. Cascade is strictly opt-in in this release.
+- The default cascade flag will flip on in v2.0.0 along with a new `@SanitizeIgnore` opt-out annotation.
+
 ## [1.1.0] - 2026-04-01
 
 ### Added

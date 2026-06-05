@@ -41,12 +41,12 @@ class SanitizationUtilsTest {
 	}
 
 	@Test
-	void apply_throwsOnRecord() {
+	void apply_throwsIllegalArgumentOnRecord() {
 		final ImmutableRecord rec = new ImmutableRecord("  HELLO  ");
-		final UnsupportedOperationException ex = assertThrows(UnsupportedOperationException.class,
+		final IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
 				() -> SanitizationUtils.apply(rec));
 		assertTrue(ex.getMessage().contains("ImmutableRecord"));
-		assertTrue(ex.getMessage().contains("records"));
+		assertTrue(ex.getMessage().contains("applyAndReturn"));
 	}
 
 	// --- P0: @Repeatable support ---

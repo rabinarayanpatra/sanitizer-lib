@@ -4,7 +4,7 @@ plugins {
     `maven-publish`
     id("io.spring.dependency-management") version "1.1.7"
     id("com.diffplug.spotless") version "8.6.0"
-    id("com.vanniktech.maven.publish") version "0.30.0"
+    id("com.vanniktech.maven.publish") version "0.37.0"
     id("net.ltgt.errorprone") version "5.1.0" apply false
 }
 

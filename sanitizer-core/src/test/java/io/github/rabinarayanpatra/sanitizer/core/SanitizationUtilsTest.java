@@ -49,6 +49,13 @@ class SanitizationUtilsTest {
 		assertEquals("  HELLO  ", rec.name());
 	}
 
+	@Test
+	void apply_silentlySkipsRecordWithoutAnnotations() {
+		final PlainRecord rec = new PlainRecord("  HELLO  ");
+		SanitizationUtils.apply(rec);
+		assertEquals("  HELLO  ", rec.name());
+	}
+
 	// --- P0: @Repeatable support ---
 
 	@Test
@@ -154,6 +161,9 @@ class SanitizationUtilsTest {
 	static class TypeMismatchBean {
 		@Sanitize(using = TrimSanitizer.class)
 		Integer count;
+	}
+
+	record PlainRecord(String name) {
 	}
 
 	record ImmutableRecord(@Sanitize(using = TrimSanitizer.class) String name) {

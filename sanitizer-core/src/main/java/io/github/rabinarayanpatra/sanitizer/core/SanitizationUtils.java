@@ -18,6 +18,8 @@ import io.github.rabinarayanpatra.sanitizer.annotation.Sanitize;
  */
 public final class SanitizationUtils {
 
+	private static final System.Logger LOG = System.getLogger(SanitizationUtils.class.getName());
+
 	private static final Map<Class<?>, List<Holder>> CACHE = new ConcurrentHashMap<>();
 
 	private SanitizationUtils() {
@@ -80,6 +82,7 @@ public final class SanitizationUtils {
 	 */
 	private static List<Holder> inspect(final Class<?> cls) {
 		if (cls.isRecord()) {
+			warnIfRecordIsAnnotated(cls);
 			return List.of();
 		}
 
@@ -116,6 +119,26 @@ public final class SanitizationUtils {
 		}
 
 		return list;
+	}
+
+	/**
+	 * Logs a one-time warning when a record carries {@link Sanitize} annotations
+	 * that will be ignored. {@code @Sanitize} targets {@code ElementType.FIELD}, so
+	 * annotations on record components propagate to the backing fields and are
+	 * detectable via {@link Class#getDeclaredFields()}. Called only from
+	 * {@link #inspect(Class)}, which runs once per class thanks to the cache.
+	 */
+	private static void warnIfRecordIsAnnotated(final Class<?> cls) {
+		for (final Field field : cls.getDeclaredFields()) {
+			if (field.getAnnotationsByType(Sanitize.class).length > 0) {
+				LOG.log(System.Logger.Level.WARNING,
+						"@Sanitize on record {0} is ignored: record components are final and cannot be "
+								+ "sanitized in place. Sanitize a mutable DTO/POJO first, then copy the "
+								+ "cleaned values into the record.",
+						cls.getName());
+				return;
+			}
+		}
 	}
 
 	/**

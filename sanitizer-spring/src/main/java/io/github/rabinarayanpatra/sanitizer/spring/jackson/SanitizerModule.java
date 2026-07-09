@@ -91,6 +91,11 @@ public final class SanitizerModule extends SimpleModule {
 		@Override
 		public JsonDeserializer<?> modifyDeserializer(final DeserializationConfig config,
 				final BeanDescription beanDesc, final JsonDeserializer<?> deserializer) {
+			// Records cannot be sanitized in place (final components), so wrapping
+			// them would only add per-instance overhead for a guaranteed no-op.
+			if (beanDesc.getBeanClass().isRecord()) {
+				return deserializer;
+			}
 			return new SanitizingDeserializer(deserializer);
 		}
 	}

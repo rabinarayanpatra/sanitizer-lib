@@ -70,12 +70,17 @@ public final class SanitizationUtils {
 	 * Inspects the class hierarchy to find fields annotated with {@link Sanitize}
 	 * and builds sanitizer handlers. Walks superclasses to support
 	 * {@code @MappedSuperclass} and other inheritance patterns.
+	 * <p>
+	 * Java records are intentionally skipped: their components are {@code final}
+	 * and cannot be reassigned via reflection, so in-place sanitization is not
+	 * possible. Rather than failing, {@link #apply(Object)} treats records (and any
+	 * bean graph that contains them) as a no-op. This keeps the library usable in
+	 * projects that mix records and POJOs. If you need record values sanitized,
+	 * sanitize the source POJO/DTO before copying its values into the record.
 	 */
 	private static List<Holder> inspect(final Class<?> cls) {
 		if (cls.isRecord()) {
-			throw new UnsupportedOperationException("@Sanitize is not supported on Java records (" + cls.getName()
-					+ "). Records have final fields that cannot be modified via reflection. "
-					+ "Use a mutable DTO or POJO instead, and copy values into the record after sanitization.");
+			return List.of();
 		}
 
 		final List<Holder> list = new ArrayList<>();

@@ -71,10 +71,12 @@ The library follows a modular design with clear separation of concerns:
 
 Sanitization works by mutating annotated fields via reflection. Java records
 have `final` components that cannot be reassigned this way, so **records are not
-sanitized** — they are silently skipped. This applies both to top-level records
-and to records embedded inside a sanitized bean graph, so mixing records and
-POJOs is safe and never throws. If you need record values sanitized, sanitize a
-mutable DTO/POJO first and copy the cleaned values into the record.
+sanitized** — they are skipped. This applies both to top-level records and to
+records embedded inside a sanitized bean graph, so mixing records and POJOs is
+safe and never throws. If a record carries `@Sanitize` annotations, a one-time
+warning is logged (via `System.Logger`) to make the misconfiguration visible.
+If you need record values sanitized, sanitize a mutable DTO/POJO first and copy
+the cleaned values into the record.
 
 ## Implementation Guide
 
@@ -86,13 +88,13 @@ mutable DTO/POJO first and copy the cleaned values into the record.
 <dependency>
     <groupId>io.github.rabinarayanpatra.sanitizer</groupId>
     <artifactId>sanitizer-spring</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
 </dependency>
 ```
 
 **Gradle (Kotlin DSL):**
 ```kotlin
-implementation("io.github.rabinarayanpatra.sanitizer:sanitizer-spring:1.1.0")
+implementation("io.github.rabinarayanpatra.sanitizer:sanitizer-spring:1.1.1")
 ```
 
 #### JPA Integration (Optional)
@@ -101,13 +103,13 @@ implementation("io.github.rabinarayanpatra.sanitizer:sanitizer-spring:1.1.0")
 <dependency>
     <groupId>io.github.rabinarayanpatra.sanitizer</groupId>
     <artifactId>sanitizer-jpa</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
 </dependency>
 ```
 
 **Gradle (Kotlin DSL):**
 ```kotlin
-implementation("io.github.rabinarayanpatra.sanitizer:sanitizer-jpa:1.1.0")
+implementation("io.github.rabinarayanpatra.sanitizer:sanitizer-jpa:1.1.1")
 ```
 
 ## Implementation Examples

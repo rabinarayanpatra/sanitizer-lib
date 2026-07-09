@@ -41,8 +41,9 @@ class SanitizerModuleIntegrationTest {
 
 	@Test
 	void jsonDeserialization_doesNotThrowForRecord() throws Exception {
-		// A plain record (no @Sanitize) must deserialize without the module
-		// throwing UnsupportedOperationException. Records are silently skipped.
+		// A record must deserialize without the module throwing
+		// UnsupportedOperationException, even when its components carry @Sanitize.
+		// Records are skipped because their final components cannot be mutated.
 		final String json = "{\"email\":\"  USER@EXAMPLE.COM  \"}";
 		final SampleRecord rec = mapper.readValue(json, SampleRecord.class);
 		// Record components are final and cannot be sanitized: value passes through.

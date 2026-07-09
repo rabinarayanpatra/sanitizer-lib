@@ -67,6 +67,15 @@ The library follows a modular design with clear separation of concerns:
 - Gradle 8.x+
 - Spring Boot 3.4.x (for Spring integration)
 
+### Java Records
+
+Sanitization works by mutating annotated fields via reflection. Java records
+have `final` components that cannot be reassigned this way, so **records are not
+sanitized** — they are silently skipped. This applies both to top-level records
+and to records embedded inside a sanitized bean graph, so mixing records and
+POJOs is safe and never throws. If you need record values sanitized, sanitize a
+mutable DTO/POJO first and copy the cleaned values into the record.
+
 ## Implementation Guide
 
 ### Dependency Configuration

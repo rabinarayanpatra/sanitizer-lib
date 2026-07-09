@@ -39,6 +39,26 @@ class SanitizerModuleIntegrationTest {
 		assertEquals("user@example.com", dto.getNested().getEmail());
 	}
 
+	@Test
+	void jsonDeserialization_doesNotThrowForRecord() throws Exception {
+		// A plain record (no @Sanitize) must deserialize without the module
+		// throwing UnsupportedOperationException. Records are silently skipped.
+		final String json = "{\"email\":\"  USER@EXAMPLE.COM  \"}";
+		final SampleRecord rec = mapper.readValue(json, SampleRecord.class);
+		// Record components are final and cannot be sanitized: value passes through.
+		assertEquals("  USER@EXAMPLE.COM  ", rec.email());
+	}
+
+	@Test
+	void jsonDeserialization_doesNotThrowForBeanEmbeddingRecord() throws Exception {
+		// A POJO whose graph embeds a record must still deserialize. The POJO's own
+		// annotated field is sanitized; the embedded record is skipped silently.
+		final String json = "{\"outer\":\"  OUTER  \",\"record\":{\"email\":\"  USER@EXAMPLE.COM  \"}}";
+		final RecordWrapperDto dto = mapper.readValue(json, RecordWrapperDto.class);
+		assertEquals("outer", dto.getOuter());
+		assertEquals("  USER@EXAMPLE.COM  ", dto.getRecord().email());
+	}
+
 	@Configuration
 	@EnableAutoConfiguration
 	@ComponentScan(basePackages = "io.github.rabinarayanpatra.sanitizer")
@@ -80,6 +100,33 @@ class SanitizerModuleIntegrationTest {
 
 		public void setEmail(final String email) {
 			this.email = email;
+		}
+	}
+
+	record SampleRecord(@Sanitize(using = {
+			TrimSanitizer.class, LowerCaseSanitizer.class}) String email) {
+	}
+
+	static class RecordWrapperDto {
+		@Sanitize(using = {TrimSanitizer.class, LowerCaseSanitizer.class})
+		private String outer;
+
+		private SampleRecord record;
+
+		public String getOuter() {
+			return outer;
+		}
+
+		public void setOuter(final String outer) {
+			this.outer = outer;
+		}
+
+		public SampleRecord getRecord() {
+			return record;
+		}
+
+		public void setRecord(final SampleRecord record) {
+			this.record = record;
 		}
 	}
 }

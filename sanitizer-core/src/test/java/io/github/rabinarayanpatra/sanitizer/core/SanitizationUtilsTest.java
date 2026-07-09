@@ -41,12 +41,12 @@ class SanitizationUtilsTest {
 	}
 
 	@Test
-	void apply_throwsOnRecord() {
+	void apply_silentlySkipsRecord() {
 		final ImmutableRecord rec = new ImmutableRecord("  HELLO  ");
-		final UnsupportedOperationException ex = assertThrows(UnsupportedOperationException.class,
-				() -> SanitizationUtils.apply(rec));
-		assertTrue(ex.getMessage().contains("ImmutableRecord"));
-		assertTrue(ex.getMessage().contains("records"));
+		// Records cannot be mutated via reflection, so apply() must be a no-op
+		// instead of throwing. The record must be returned unchanged.
+		SanitizationUtils.apply(rec);
+		assertEquals("  HELLO  ", rec.name());
 	}
 
 	// --- P0: @Repeatable support ---

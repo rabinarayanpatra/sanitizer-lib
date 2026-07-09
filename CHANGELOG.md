@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Fixed
+- Java records are now silently skipped instead of throwing `UnsupportedOperationException`. Previously, because the Jackson `SanitizerModule` wraps every bean deserializer, deserializing **any** record (even one without `@Sanitize`, or a record embedded in a POJO) failed with an exception, making the library unusable in projects that contain records unless the `BeanDeserializerModifier` was overridden. Records cannot be mutated via reflection, so they are now treated as a no-op. See the "Java Records" section in the README.
+
 ## [1.1.0] - 2026-04-01
 
 ### Added
